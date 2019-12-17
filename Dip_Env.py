@@ -2,6 +2,8 @@ from collections import OrderedDict, namedtuple
 
 
 Region = namedtuple('Region', 'name owner supply army water coastal home neighbours')
+Army = namedtuple('Army', 'owner region')
+Fleet = namedtuple('Fleet', 'owner region')
 
 
 class Env:
@@ -58,8 +60,9 @@ class Env:
 
 
 if __name__ == '__main__':
-    place = Region(name = 'Sydney', owner=None, supply=False, army=None, water=False,
-                   coastal=True, home=None, neighbours=['Edinburgh', 'Liverpool', 'Yorkshire'])
+    place = Region(name = 'Sydney', owner=None, supply=False, army=None,
+                   water=False, coastal=True, home=None,
+                   neighbours=['Edinburgh', 'Liverpool', 'Yorkshire'])
 
     print(place)
     print(place.army)

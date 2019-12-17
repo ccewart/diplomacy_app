@@ -1,10 +1,10 @@
-from Dip_Player import Player, Move_Order, Army
+from Dip_Player import Player
 from Dip_Env import Env
 
 
 class Game:
     def __init__(self):
-        self.order_sheet = None
+        self.order_sheet = []
         self.phase = 0
         self.phases = ['orders', 'retreat', 'orders', 'retreat', 'build']
         self.players = []
@@ -34,6 +34,10 @@ class Game:
         return self.phases[self.phase]
 
 
+    @property
+    def board(self):
+        self.game_map.print_board()
+
     #def collect_orders(self):
 
 
@@ -41,6 +45,8 @@ if __name__ == '__main__':
     game = Game()
     game.initiate()
     game.initiate_prints()
-        
+    print()
+    print(f'Phase: {game.get_phase}')
+    print(game.players)
+    game.board
 
-    Move1 = Move_Order('Edin', 1).details('Edin', 'Yorkshire')
