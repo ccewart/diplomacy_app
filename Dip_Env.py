@@ -1,9 +1,22 @@
 from collections import OrderedDict, namedtuple
+from Dip_Orders import Order, Create_Army, Hold, Move, Support
 
 
 Region = namedtuple('Region', 'name owner supply army water coastal home neighbours')
 Army = namedtuple('Army', 'owner region')
 Fleet = namedtuple('Fleet', 'owner region')
+
+
+class Region:
+    def __init__(self, name, owner, supply, army, water, coastal, home, neighbours):
+        self.name = name
+        self.owner = owner
+        self.supply = supply
+        self.army = army
+        self.water = water
+        self.coastal = coastal
+        self.home = home
+        self.neighbours = neighbours
 
 
 class Env:
@@ -18,10 +31,23 @@ class Env:
             ('Yorkshire', Region(name = 'Edinburgh', owner=None, supply=False, army=None,
                                  water=False, coastal=True, home=None,
                                  neighbours=['Clyde', 'Edinburgh', 'Liverpool'])),
-            ('Liverpool', Region(name = 'Liverpool', owner=0, supply=True, army=None,
+            ('Liverpool', Region(name = 'Liverpool', owner=1, supply=True, army=None,
                                  water=False, coastal=True, home=0,
                                  neighbours=['Clyde', 'Edinburgh', 'Yorkshire']))
             ])
+
+
+    def resolve_orders(self, order_sheet):
+        for order in order_sheet:
+            if type(order) == Create_Army:
+                if self.regions[order.region].supply == True and \
+                self.regions[order.region].army == None and \
+                self.regions[order.region].owner == order.player:
+                    print('   ', order.player)
+                    print('   ', order.region)
+                    print('   ', self.regions[order.region])
+                    
+                    self.regions[order.region].army = True
 
 
     def lodge_move(self, from_, to, owner):
@@ -64,6 +90,7 @@ if __name__ == '__main__':
                    water=False, coastal=True, home=None,
                    neighbours=['Edinburgh', 'Liverpool', 'Yorkshire'])
 
+    
     print(place)
     print(place.army)
     

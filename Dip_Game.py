@@ -1,5 +1,6 @@
 from Dip_Player import Player
 from Dip_Env import Env
+from Dip_Orders import Order, Create_Army, Hold, Move, Support
 
 
 class Game:
@@ -38,7 +39,10 @@ class Game:
     def board(self):
         self.game_map.print_board()
 
-    #def collect_orders(self):
+
+    def collect_orders(self):
+        for player in self.players:
+            self.order_sheet.append(player.orders)
 
 
 if __name__ == '__main__':
@@ -47,6 +51,21 @@ if __name__ == '__main__':
     game.initiate_prints()
     print()
     print(f'Phase: {game.get_phase}')
-    print(game.players)
+
+    # Player 0 create army
+    order1 = Create_Army(0, 'Edinburgh')
+    game.players[0].orders.append(order1)
+
+    # Player 1 create army
+    order2 = Create_Army(1, 'Liverpool')
+    game.players[1].orders.append(order2)
+
+    game.order_sheet.append(order1)
+    game.order_sheet.append(order2)
+    for order in game.order_sheet:
+        print(order.details())
+
+    game.game_map.resolve_orders(game.order_sheet)
+    
     game.board
 
