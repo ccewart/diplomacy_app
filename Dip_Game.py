@@ -4,17 +4,18 @@ from Dip_Orders import Order, Create_Army, Hold, Move, Support
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, nb_players):
         self.order_sheet = []
         self.phase = 0
         self.phases = ['orders', 'retreat', 'orders', 'retreat', 'build']
         self.players = []
-        self.game_map = Env()
+        self.game_map = Env(nb_players)
+        self.nb_players = nb_players
 
 
     def initiate(self):
         names = ['Charles', 'Sam']
-        for i in range(2):
+        for i in range(self.nb_players):
             self.players.append(Player(names[i], i))
 
 
@@ -46,7 +47,7 @@ class Game:
 
 
 if __name__ == '__main__':
-    game = Game()
+    game = Game(2)
     game.initiate()
     game.initiate_prints()
     print()
@@ -65,7 +66,22 @@ if __name__ == '__main__':
     for order in game.order_sheet:
         print(order.details())
 
-    game.game_map.resolve_orders(game.order_sheet)
-    
+    game.game_map.submit_orders(game.order_sheet)
     game.board
+    print()
+    
+    # new order sheet
+    game.order_sheet = []
+    # Player 0 moves army
+    order3 = Move(0, 'Edinburgh', to='Clyde')
+    # Player 1 moves army
+    order4 = Move(1, 'Liverpool', to='Yorkshire')
 
+    game.order_sheet.append(order3)
+    game.order_sheet.append(order4)
+
+    game.game_map.submit_orders(game.order_sheet)
+
+    game.board
+    
+    game.game_map.resolve_orders()
