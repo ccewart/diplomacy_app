@@ -8,7 +8,7 @@ class Order:
 
 class Create_Army(Order):
     def details(self):
-        return f'Creating army for player {self.player} at {self.region}'
+        return f'Player {self.player} creates army at {self.region}'
 
 class Hold(Order):
     def details(self):
@@ -16,7 +16,7 @@ class Hold(Order):
 
 class Move(Order):
     def details(self):
-        return f'Moving player {self.player}\'s army from {self.region} to {self.to}'
+        return f'Player {self.player} moves army from {self.region} to {self.to}'
 
 class Support(Order):
     def details(self):

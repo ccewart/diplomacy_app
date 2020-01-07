@@ -18,7 +18,7 @@ class Env:
             ('Edinburgh', Region(name = 'Edinburgh', owner=0, supply=True,
                                  army=None, water=False, coastal=True, home=0,
                                  neighbours=['Clyde', 'Liverpool', 'Yorkshire'])),
-            ('Yorkshire', Region(name = 'Edinburgh', owner=None, supply=False,
+            ('Yorkshire', Region(name = 'Yorkshire', owner=None, supply=False,
                                  army=None, water=False, coastal=True, home=None,
                                  neighbours=['Clyde', 'Edinburgh', 'Liverpool'])),
             ('Liverpool', Region(name = 'Liverpool', owner=1, supply=True,
@@ -32,26 +32,29 @@ class Env:
             if type(order) == Create_Army:
                 self.create_army(order)
             if type(order) == Move:
-                self.move(order)
-                #self.lodge_move(order)
-
-
-    def lodge_move(self, order):
-        self.moves[order.region][order.player] += 1
+                self.moves[order.to][order.player] += 1
 
 
     def resolve_orders(self):
-        # check if two people aren't moving into the same space
+        print('self.moves:', self.moves)
+
+        for region in self.moves:
+            print(region)
+        # who has max strength
+        move_strengths = []
         for region in self.moves:
             max_strength = [i for i, x in enumerate(self.moves[region]) \
                             if x == max(self.moves[region])]
-            # print(max_strength)
+            move_strengths.append((region, max_strength))
+        #print('move_strengths:', move_strengths)
+        
+        #for region in move_strengths:
+            
             # result [0] means player 0 has the most strength to move into that
             # region
             # approve player 0 to move into Edinburgh
             # approve player 1 to move into Liverpool
             
-
 
     def move(self, order):
         self.regions[order.region].army = None
@@ -87,15 +90,6 @@ if __name__ == '__main__':
                    neighbours=['Edinburgh', 'Liverpool', 'Yorkshire'])
     #print(place)
     #print(place.army)
-
-    new_dict = OrderedDict([])
-    with open('regions.txt', 'r') as file:
-        for line in file:
-            line = line.strip('\n')
-            print(line.split(' ', 1))
-            #new_dict.update
-    
-
 
 
 

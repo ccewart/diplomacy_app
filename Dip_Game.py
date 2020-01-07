@@ -81,7 +81,6 @@ if __name__ == '__main__':
     game.order_sheet.append(order4)
 
     game.game_map.submit_orders(game.order_sheet)
-
-    game.board
-    
     game.game_map.resolve_orders()
+
+    #game.board
