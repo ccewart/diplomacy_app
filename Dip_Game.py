@@ -50,9 +50,7 @@ if __name__ == '__main__':
     game = Game(2)
     game.initiate()
     game.initiate_prints()
-    print()
-    print(f'Phase: {game.get_phase}')
-
+    
     # Player 0 create army
     order1 = Create_Army(0, 'Edinburgh')
     game.players[0].orders.append(order1)
@@ -60,7 +58,7 @@ if __name__ == '__main__':
     # Player 1 create army
     order2 = Create_Army(1, 'Liverpool')
     game.players[1].orders.append(order2)
-
+    
     game.order_sheet.append(order1)
     game.order_sheet.append(order2)
     for order in game.order_sheet:
@@ -68,6 +66,8 @@ if __name__ == '__main__':
 
     game.game_map.submit_orders(game.order_sheet)
     game.board
+    print()
+    print(f'Phase: {game.get_phase}')
     print()
     
     # new order sheet
@@ -82,5 +82,5 @@ if __name__ == '__main__':
 
     game.game_map.submit_orders(game.order_sheet)
     game.game_map.resolve_orders()
-
-    #game.board
+    print()
+    game.board

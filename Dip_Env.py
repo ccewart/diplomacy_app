@@ -6,10 +6,10 @@ from Dip_Env_Classes import Region, Army, Fleet
 class Env:
     def __init__(self, nb_players):
         self.moves = OrderedDict([
-            ('Clyde', [0 for i in range(nb_players)]),
-            ('Edinburgh', [0 for i in range(nb_players)]),
-            ('Yorkshire', [0 for i in range(nb_players)]),
-            ('Liverpool', [0 for i in range(nb_players)])
+            ('Clyde', []),
+            ('Edinburgh', []),
+            ('Yorkshire', []),
+            ('Liverpool', [])
             ])
         self.regions = OrderedDict([
             ('Clyde', Region(name = 'Clyde', owner=None, supply=False,
@@ -32,31 +32,27 @@ class Env:
             if type(order) == Create_Army:
                 self.create_army(order)
             if type(order) == Move:
-                self.moves[order.to][order.player] += 1
+                self.moves[order.to].append(order)
 
 
     def resolve_orders(self):
+        self.results = {}
         print('self.moves:', self.moves)
-
-        for region in self.moves:
-            print(region)
-        # who has max strength
-        move_strengths = []
-        for region in self.moves:
-            max_strength = [i for i, x in enumerate(self.moves[region]) \
-                            if x == max(self.moves[region])]
-            move_strengths.append((region, max_strength))
-        #print('move_strengths:', move_strengths)
+        print(self.moves['Clyde'][0])
+        order1 = self.moves['Clyde'][0]
+        order2 = self.moves['Yorkshire'][0]
+        self.move(order1)
+        self.move(order2)
         
-        #for region in move_strengths:
-            
-            # result [0] means player 0 has the most strength to move into that
-            # region
-            # approve player 0 to move into Edinburgh
-            # approve player 1 to move into Liverpool
-            
 
-    def move(self, order):
+    def reset_board(self):
+        self.regions['Clyde'].army = None
+        self.regions['Edinburgh'].army = True
+        self.regions['Yorkshire'].army = None
+        self.regions['Liverpool'].army = True
+
+
+    def move(self, order): 
         self.regions[order.region].army = None
         self.regions[order.to].army = True
 
