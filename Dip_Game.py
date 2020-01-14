@@ -1,6 +1,6 @@
 from Dip_Player import Player
 from Dip_Env import Env
-from Dip_Orders import Order, Create_Army, Hold, Move, Support
+from Dip_Orders import Order, Create_Unit, Hold, Move, Support
 
 
 class Game:
@@ -43,7 +43,8 @@ class Game:
 
     def collect_orders(self):
         for player in self.players:
-            self.order_sheet.append(player.orders)
+            for order in player.orders:
+                self.order_sheet.append(order)
 
 
 if __name__ == '__main__':
@@ -52,17 +53,15 @@ if __name__ == '__main__':
     game.initiate_prints()
     
     # Player 0 create army
-    order1 = Create_Army(0, 'Edinburgh')
+    order1 = Create_Unit(0, 'Edinburgh')
     game.players[0].orders.append(order1)
 
     # Player 1 create army
-    order2 = Create_Army(1, 'Liverpool')
+    order2 = Create_Unit(1, 'Liverpool')
     game.players[1].orders.append(order2)
-    
-    game.order_sheet.append(order1)
-    game.order_sheet.append(order2)
-    for order in game.order_sheet:
-        print(order.details())
+
+    game.collect_orders()
+    print([order.details() for order in game.order_sheet])
 
     game.game_map.submit_orders(game.order_sheet)
     game.board
@@ -70,13 +69,10 @@ if __name__ == '__main__':
     print(f'Phase: {game.get_phase}')
     print()
     
-    # new order sheet
     game.order_sheet = []
-    # Player 0 moves army
     order3 = Move(0, 'Edinburgh', to='Clyde')
-    # Player 1 moves army
     order4 = Move(1, 'Liverpool', to='Yorkshire')
-
+    
     game.order_sheet.append(order3)
     game.order_sheet.append(order4)
 

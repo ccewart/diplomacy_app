@@ -1,9 +1,9 @@
 class Region:
-    def __init__(self, name, owner, supply, army, water, coastal, home, neighbours):
+    def __init__(self, name, owner, supply, unit, water, coastal, home, neighbours):
         self.name = name
         self.owner = owner
         self.supply = supply
-        self.army = army
+        self.unit = unit
         self.water = water
         self.coastal = coastal
         self.home = home
@@ -12,11 +12,13 @@ class Region:
 
 class Army:
     def __init__(self, owner, region):
+        self.orders = None
         self.owner = owner
         self.region = region
 
 
 class Fleet:
     def __init__(self, owner, region):
+        self.orders = None
         self.owner = owner
         self.region = region
