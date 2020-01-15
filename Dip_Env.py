@@ -16,13 +16,15 @@ class Env:
                              unit=None, water=False, coastal=True, home=None,
                              neighbours=['Edinburgh', 'Liverpool', 'Yorkshire'])),
             ('Edinburgh', Region(name = 'Edinburgh', owner=0, supply=True,
-                                 unit=None, water=False, coastal=True, home=0,
+                                 unit=None, water=False,
+                                 coastal=True, home=0,
                                  neighbours=['Clyde', 'Liverpool', 'Yorkshire'])),
             ('Yorkshire', Region(name = 'Yorkshire', owner=None, supply=False,
                                  unit=None, water=False, coastal=True, home=None,
                                  neighbours=['Clyde', 'Edinburgh', 'Liverpool'])),
             ('Liverpool', Region(name = 'Liverpool', owner=1, supply=True,
-                                 unit=None, water=False, coastal=True, home=0,
+                                 unit=None, water=False,
+                                 coastal=True, home=0,
                                  neighbours=['Clyde', 'Edinburgh', 'Yorkshire']))
             ])
 
@@ -37,8 +39,6 @@ class Env:
 
     def resolve_orders(self):
         self.results = {}
-        print('self.moves:', self.moves)
-        print(self.moves['Clyde'][0])
         order1 = self.moves['Clyde'][0]
         order2 = self.moves['Yorkshire'][0]
         self.move(order1)
@@ -54,8 +54,9 @@ class Env:
         if self.regions[order.region].supply == True and \
         self.regions[order.region].unit == None and \
         self.regions[order.region].owner == order.player:
-            self.regions[order.region].unit = True
-
+            new_army = Army(order.player, order.region)
+            self.regions[order.region].unit = new_army
+            
 
     def print_board(self):
         print('-----------------------')
@@ -71,17 +72,3 @@ class Env:
         print('          |') if not self.regions['Liverpool'].unit \
         else print('    A     |')
         print('-----------------------')
-
-
-if __name__ == '__main__':
-    place = Region(name = 'Sydney', owner=None, supply=False, unit=None,
-                   water=False, coastal=True, home=None,
-                   neighbours=['Edinburgh', 'Liverpool', 'Yorkshire'])
-    #print(place)
-    #print(place.army)
-
-
-
-
-    
-

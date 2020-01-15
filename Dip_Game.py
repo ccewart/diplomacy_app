@@ -1,6 +1,7 @@
 from Dip_Player import Player
 from Dip_Env import Env
 from Dip_Orders import Order, Create_Unit, Hold, Move, Support
+from Dip_Tests import test_create_units, test_move_units
 
 
 class Game:
@@ -11,6 +12,10 @@ class Game:
         self.players = []
         self.game_map = Env(nb_players)
         self.nb_players = nb_players
+
+
+    def reset_order_sheet(self):
+        self.order_sheet = []
 
 
     def initiate(self):
@@ -51,32 +56,13 @@ if __name__ == '__main__':
     game = Game(2)
     game.initiate()
     game.initiate_prints()
-    
-    # Player 0 create army
-    order1 = Create_Unit(0, 'Edinburgh')
-    game.players[0].orders.append(order1)
-
-    # Player 1 create army
-    order2 = Create_Unit(1, 'Liverpool')
-    game.players[1].orders.append(order2)
-
-    game.collect_orders()
-    print([order.details() for order in game.order_sheet])
-
-    game.game_map.submit_orders(game.order_sheet)
-    game.board
-    print()
-    print(f'Phase: {game.get_phase}')
     print()
     
-    game.order_sheet = []
-    order3 = Move(0, 'Edinburgh', to='Clyde')
-    order4 = Move(1, 'Liverpool', to='Yorkshire')
-    
-    game.order_sheet.append(order3)
-    game.order_sheet.append(order4)
+    test_create_units(game)
 
-    game.game_map.submit_orders(game.order_sheet)
-    game.game_map.resolve_orders()
-    print()
-    game.board
+    print(f'\nPhase: {game.get_phase}\n')
+    
+    game.reset_order_sheet()
+
+    test_move_units(game)
+
