@@ -1,7 +1,7 @@
 from Dip_Player import Player
 from Dip_Env import Env
 from Dip_Orders import Order, Create_Unit, Hold, Move, Support
-from Dip_Tests import test_create_units, test_move_units
+from Dip_Tests import test_create_units, test_move_units, test_move_units_2
 
 
 class Game:
@@ -46,11 +46,16 @@ class Game:
         self.game_map.print_board()
 
 
-    def collect_orders(self):
+    def collect_build_orders(self):
         for player in self.players:
             for order in player.orders:
                 self.order_sheet.append(order)
 
+
+    def collect_results(self):
+        for result in self.game_map.results.values():
+            game.players[result[2]].units.append(result[0])
+    
 
 if __name__ == '__main__':
     game = Game(2)
@@ -64,5 +69,5 @@ if __name__ == '__main__':
     
     game.reset_order_sheet()
 
-    test_move_units(game)
-
+    #test_move_units(game)
+    test_move_units_2(game)

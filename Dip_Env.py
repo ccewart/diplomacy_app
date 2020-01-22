@@ -5,12 +5,9 @@ from Dip_Env_Classes import Region, Army, Fleet
 
 class Env:
     def __init__(self, nb_players):
-        self.moves = OrderedDict([
-            ('Clyde', []),
-            ('Edinburgh', []),
-            ('Yorkshire', []),
-            ('Liverpool', [])
-            ])
+        self.moves = {}
+        self.results = {}
+        self.units = {}
         self.regions = OrderedDict([
             ('Clyde', Region(name = 'Clyde', owner=None, supply=False,
                              unit=None, water=False, coastal=True, home=None,
@@ -29,26 +26,39 @@ class Env:
             ])
 
 
-    def submit_orders(self, order_sheet):
+    def resolve_builds(self, order_sheet):
         for order in order_sheet:
             if type(order) == Create_Unit:
                 self.create_unit(order)
-            if type(order) == Move:
-                self.moves[order.to].append(order)
 
 
-    def resolve_orders(self):
-        self.results = {}
-        order1 = self.moves['Clyde'][0]
-        order2 = self.moves['Yorkshire'][0]
-        self.move(order1)
-        self.move(order2)
+    def resolve_orders(self, players):
+        for player in players:
+            for unit in player.units:
+                self.units[hash(unit)] = unit
+                self.moves[hash(unit)] = unit.orders
+        conflicts = self.find_conflicts()
+        print('conflicts:', conflicts)
+        for unit, order in self.moves.items():
+            self.results[unit] = order.to
+        self.update_regions()
 
 
-    def move(self, order): 
-        self.regions[order.region].unit = None
-        self.regions[order.to].unit = True
+    def find_conflicts(self):
+        lst = [move.to for move in self.moves.values()]
+        return set([i for i in lst if lst.count(i)>1])
+        
 
+    def update_regions(self):
+        self.clear_all_regions()
+        for unit, region in self.results.items():
+            self.regions[region].unit = unit
+
+
+    def clear_all_regions(self):
+        for region in self.regions.values():
+            region.unit = None
+        
 
     def create_unit(self, order):
         if self.regions[order.region].supply == True and \
@@ -56,7 +66,12 @@ class Env:
         self.regions[order.region].owner == order.player:
             new_army = Army(order.player, order.region)
             self.regions[order.region].unit = new_army
-            
+            self.results[hash(new_army)] = (new_army, order.region, order.player)
+   
+
+    def reset_results(self):
+        self.results = {}
+
 
     def print_board(self):
         print('-----------------------')
