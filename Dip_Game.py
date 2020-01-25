@@ -1,7 +1,8 @@
 from Dip_Player import Player
 from Dip_Env import Env
 from Dip_Orders import Order, Create_Unit, Hold, Move, Support
-from Dip_Tests import test_create_units, test_move_units, test_move_units_2
+from Dip_Tests import test_create_units, test_move_units_1, test_move_units_2,\
+    test_move_units_3, test_move_units_4, test_move_units_5, test_hold_units
 
 
 class Game:
@@ -31,6 +32,10 @@ class Game:
         self.game_map.print_board()
 
 
+    def get_unit(self, player, unit):
+        return game.players[player].units[unit]
+    
+
     def next_phase(self):
         self.phase += 1
         self.phase = self.phase % 5
@@ -53,21 +58,25 @@ class Game:
 
 
     def collect_results(self):
-        for result in self.game_map.results.values():
-            game.players[result[2]].units.append(result[0])
+        for unit, _, player in self.game_map.results.values():
+            game.players[player].units.append(unit)
     
 
 if __name__ == '__main__':
     game = Game(2)
     game.initiate()
-    game.initiate_prints()
-    print()
+    #game.initiate_prints()
+    #print()
     
-    test_create_units(game)
+    #test_create_units(game, 3)
 
-    print(f'\nPhase: {game.get_phase}\n')
-    
     game.reset_order_sheet()
 
-    #test_move_units(game)
-    test_move_units_2(game)
+    #test_hold_units(game)
+    #test_move_units_1(game)
+    #test_move_units_2(game)
+    #test_move_units_3(game)
+    #test_move_units_4(game)
+    test_move_units_5(game)
+    
+    

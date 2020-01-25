@@ -9,7 +9,7 @@ class Env:
         self.results = {}
         self.units = {}
         self.regions = OrderedDict([
-            ('Clyde', Region(name = 'Clyde', owner=None, supply=False,
+            ('Clyde', Region(name = 'Clyde', owner=0, supply=True,
                              unit=None, water=False, coastal=True, home=None,
                              neighbours=['Edinburgh', 'Liverpool', 'Yorkshire'])),
             ('Edinburgh', Region(name = 'Edinburgh', owner=0, supply=True,
@@ -33,20 +33,50 @@ class Env:
 
 
     def resolve_orders(self, players):
-        for player in players:
-            for unit in player.units:
-                self.units[hash(unit)] = unit
-                self.moves[hash(unit)] = unit.orders
+        self.collect_moves(players)
         conflicts = self.find_conflicts()
-        print('conflicts:', conflicts)
+        self.resolve_conflicts(conflicts)
         for unit, order in self.moves.items():
-            self.results[unit] = order.to
+            if type(order) == Move:
+                self.results[unit] = order.to
+            if type(order) == Hold:
+                self.results[unit] = order.region
+        print('results:', self.results)
         self.update_regions()
 
 
+    def collect_moves(self, players):
+        for player in players:
+            for unit in player.units:
+                if unit.orders == None:
+                    unit.orders = Hold(player, unit.region)
+                self.units[hash(unit)] = unit
+                self.moves[hash(unit)] = unit.orders
+
+
     def find_conflicts(self):
-        lst = [move.to for move in self.moves.values()]
+        lst = []
+        for order in self.moves.values():
+            if type(order) == Move:
+                lst.append(order.to)
+            if type(order) == Hold:
+                lst.append(order.region)
         return set([i for i in lst if lst.count(i)>1])
+
+
+    def resolve_conflicts(self, conflicts):
+        print('conflicts:', conflicts)
+        conflicting_orders = [move for move in self.moves.items() \
+                              if move[1].to in conflicts \
+                              or move[1].region in conflicts]
+        for _, order in conflicting_orders:
+            print(order.details())
+        print('conflicting orders: ', conflicting_orders)
+        # to do: check for supports
+
+        # liverpool and clyde 
+        for unit, _ in conflicting_orders:
+            self.moves[unit].to = self.moves[unit].region
         
 
     def update_regions(self):
