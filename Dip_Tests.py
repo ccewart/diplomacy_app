@@ -126,14 +126,23 @@ def test_move_units_5(game):
     
 
 def test_hold_units(game):
-    print('-----hold units test-----')
-    order3 = Hold(0, 'Edinburgh')
-    order4 = Hold(1, 'Liverpool')
-    game.players[0].units[0].orders = order3
-    game.players[1].units[0].orders = order4
+    test_create_units(game, 2)
+    print('-----HOLD UNITS TEST 1-----')
+
+    unit1 = game.players[0].units[0]
+    unit2 = game.players[1].units[0]
+    order1 = Hold(0, 'Edinburgh')
+    order2 = Hold(1, 'Liverpool')
+    unit1.orders = order1
+    unit2.orders = order2
 
     game.game_map.resolve_orders(game.players)
     game.board
+
+    assert game.game_map.regions['Edinburgh'].unit == hash(unit1)
+    assert game.game_map.regions['Liverpool'].unit == hash(unit2)
+    print('-----HOLD UNITS TEST 1 PASSED-----')
+    
 
 
 

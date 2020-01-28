@@ -35,7 +35,12 @@ class Env:
     def resolve_orders(self, players):
         self.collect_moves(players)
         conflicts = self.find_conflicts()
-        self.resolve_conflicts(conflicts)
+
+        while conflicts:
+            print('moves:', self.moves)
+            conflicts = self.find_conflicts()
+            self.resolve_conflicts(conflicts)
+            print()
         for unit, order in self.moves.items():
             if type(order) == Move:
                 self.results[unit] = order.to
@@ -69,8 +74,6 @@ class Env:
         conflicting_orders = [move for move in self.moves.items() \
                               if move[1].to in conflicts \
                               or move[1].region in conflicts]
-        for _, order in conflicting_orders:
-            print(order.details())
         print('conflicting orders: ', conflicting_orders)
         # to do: check for supports
 

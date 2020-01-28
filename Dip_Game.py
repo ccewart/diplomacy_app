@@ -66,11 +66,7 @@ if __name__ == '__main__':
     game = Game(2)
     game.initiate()
     #game.initiate_prints()
-    #print()
-    
-    #test_create_units(game, 3)
-
-    game.reset_order_sheet()
+    #game.reset_order_sheet()
 
     #test_hold_units(game)
     #test_move_units_1(game)
@@ -78,5 +74,8 @@ if __name__ == '__main__':
     #test_move_units_3(game)
     #test_move_units_4(game)
     test_move_units_5(game)
-    
+
+    #game1 = Game(2)
+    #game1.initiate()
+    #test_hold_units(game1)
     
