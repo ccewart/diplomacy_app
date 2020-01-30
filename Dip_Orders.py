@@ -1,8 +1,9 @@
 class Order:
-    def __init__(self, player, region, fleet=False, to=None):
+    def __init__(self, player, region, fleet=False, from_=None, to=None):
         self.player = player
         self.region = region
-        self.fleet = None
+        self.fleet = fleet
+        self.from_ = from_
         self.to = to
 
 
