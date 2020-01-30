@@ -2,7 +2,8 @@ from Dip_Player import Player
 from Dip_Env import Env
 from Dip_Orders import Order, Create_Unit, Hold, Move, Support
 from Dip_Tests import test_create_units, test_move_units_1, test_move_units_2,\
-    test_move_units_3, test_move_units_4, test_move_units_5, test_hold_units
+    test_move_units_3, test_move_units_4, test_move_units_5, test_hold_units, \
+    test_support_1
 
 
 class Game:
@@ -73,9 +74,6 @@ if __name__ == '__main__':
     #test_move_units_2(game)
     #test_move_units_3(game)
     #test_move_units_4(game)
-    test_move_units_5(game)
-
-    #game1 = Game(2)
-    #game1.initiate()
-    #test_hold_units(game1)
+    #test_move_units_5(game)
+    test_support_1(game)
     

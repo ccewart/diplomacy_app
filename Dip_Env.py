@@ -33,7 +33,7 @@ class Env:
 
 
     def resolve_orders(self, players):
-        self.collect_moves(players)
+        self.collect_orders(players)
         conflicts = self.find_conflicts()
 
         while conflicts:
@@ -44,13 +44,13 @@ class Env:
         for unit, order in self.moves.items():
             if type(order) == Move:
                 self.results[unit] = order.to
-            if type(order) == Hold:
+            if type(order) == Hold or type(order) == Support:
                 self.results[unit] = order.region
         print('results:', self.results)
         self.update_regions()
 
 
-    def collect_moves(self, players):
+    def collect_orders(self, players):
         for player in players:
             for unit in player.units:
                 if unit.orders == None:
@@ -75,12 +75,17 @@ class Env:
                               if move[1].to in conflicts \
                               or move[1].region in conflicts]
         print('conflicting orders: ', conflicting_orders)
-        # to do: check for supports
+        self.calculate_strengths()
 
         # liverpool and clyde 
         for unit, _ in conflicting_orders:
             self.moves[unit].to = self.moves[unit].region
         
+
+    def calculate_strengths(self):
+        for unit, order in self.moves.items():
+            
+
 
     def update_regions(self):
         self.clear_all_regions()
