@@ -8,6 +8,7 @@ class Env:
         self.moves = {}
         self.results = {}
         self.units = {}
+        self.strengths = {}
         self.regions = OrderedDict([
             ('Clyde', Region(name = 'Clyde', owner=0, supply=True,
                              unit=None, water=False, coastal=True, home=None,
@@ -35,9 +36,10 @@ class Env:
     def resolve_orders(self, players):
         self.collect_orders(players)
         conflicts = self.find_conflicts()
-
+        print('UNITS:', self.units)
+        print()
         while conflicts:
-            print('moves:', self.moves)
+            print('MOVES:', self.moves)
             conflicts = self.find_conflicts()
             self.resolve_conflicts(conflicts)
             print()
@@ -46,7 +48,7 @@ class Env:
                 self.results[unit] = order.to
             if type(order) == Hold or type(order) == Support:
                 self.results[unit] = order.region
-        print('results:', self.results)
+        print('RESULTS:', self.results)
         self.update_regions()
 
 
@@ -70,21 +72,29 @@ class Env:
 
 
     def resolve_conflicts(self, conflicts):
-        print('conflicts:', conflicts)
         conflicting_orders = [move for move in self.moves.items() \
                               if move[1].to in conflicts \
                               or move[1].region in conflicts]
-        print('conflicting orders: ', conflicting_orders)
         self.calculate_strengths()
-
-        # liverpool and clyde 
-        for unit, _ in conflicting_orders:
-            self.moves[unit].to = self.moves[unit].region
+        
+        print('CONFLICTS:', conflicts)
+        print('CONFLICTING ORDERS: ', conflicting_orders)
+        print('STRENGTHS:', self.strengths)
+        for unit, order in conflicting_orders:
+            if type(order) == Move:
+                # get units which are conflicting in one region
+                
+                self.moves[unit].to = self.moves[unit].region
         
 
     def calculate_strengths(self):
+        for unit in self.moves:
+            self.strengths[unit] = 1
         for unit, order in self.moves.items():
-            
+            if type(order) == Support:
+                region = order.from_
+                supported_unit = self.get_unit_by_region(region)
+                self.strengths[supported_unit] += 1
 
 
     def update_regions(self):
@@ -110,6 +120,10 @@ class Env:
     def reset_results(self):
         self.results = {}
 
+
+    def get_unit_by_region(self, region):
+        return hash(self.regions[region].unit)
+        
 
     def print_board(self):
         print('-----------------------')
