@@ -6,9 +6,9 @@ from Dip_Env_Classes import Region, Army, Fleet
 class Env:
     def __init__(self, nb_players):
         self.moves = {}
-        self.results = {}
         self.units = {}
         self.strengths = {}
+        self.results = {}
         self.regions = OrderedDict([
             ('Clyde', Region(name = 'Clyde', owner=0, supply=True,
                              unit=None, water=False, coastal=True, home=None,
@@ -72,11 +72,15 @@ class Env:
 
 
     def resolve_conflicts(self, conflicts):
+        conflicting_orders = {}
+        #conflicting_region = conflicts.pop()
+        
         conflicting_orders = [move for move in self.moves.items() \
                               if move[1].to in conflicts \
                               or move[1].region in conflicts]
         self.calculate_strengths()
-        
+
+        #print('CONFLICTING REGION:', conflicting_region)
         print('CONFLICTS:', conflicts)
         print('CONFLICTING ORDERS: ', conflicting_orders)
         print('STRENGTHS:', self.strengths)
