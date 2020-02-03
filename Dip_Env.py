@@ -72,23 +72,34 @@ class Env:
 
 
     def resolve_conflicts(self, conflicts):
-        conflicting_orders = {}
-        #conflicting_region = conflicts.pop()
-        
-        conflicting_orders = [move for move in self.moves.items() \
-                              if move[1].to in conflicts \
-                              or move[1].region in conflicts]
-        self.calculate_strengths()
-
-        #print('CONFLICTING REGION:', conflicting_region)
         print('CONFLICTS:', conflicts)
+        conflicting_region = conflicts.pop()
+        conflicting_orders = self.get_conflicting_orders(conflicting_region)
+        strengths = self.calculate_strengths2(conflicting_orders)
+        print('CONFLICTING REGION:', conflicting_region)
         print('CONFLICTING ORDERS: ', conflicting_orders)
-        print('STRENGTHS:', self.strengths)
+        print('STRENGTHS:', strengths)
         for unit, order in conflicting_orders:
             if type(order) == Move:
-                # get units which are conflicting in one region
-                
                 self.moves[unit].to = self.moves[unit].region
+
+
+    def get_conflicting_orders(self, conflicting_region):
+        conflicting_orders = []
+        for unit, order in self.moves.items():
+            if order.to == conflicting_region or \
+            order.region == conflicting_region:
+                conflicting_orders.append(order)
+        return conflicting_orders
+
+
+    def calculate_strengths2(self, conflicting_orders):
+        supporting_orders = [order for order in conflicting_orders if \
+                             type(order) == Support]
+        move_orders = [order for order in conflicting_orders if \
+                      type(order) == Move]
+        print('SUPPORTING ORDERS:', supporting_orders)
+        print('MOVE ORDERS:', move_orders)
         
 
     def calculate_strengths(self):

@@ -1,6 +1,7 @@
 class Order:
     def __init__(self, player, region, fleet=False, from_=None, to=None):
         self.resolved = False
+        self.strength = 1
         self.player = player
         self.region = region
         self.fleet = fleet
