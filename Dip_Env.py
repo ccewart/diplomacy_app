@@ -36,14 +36,9 @@ class Env:
     def resolve_orders(self, players):
         self.collect_orders(players)
         conflicts = self.find_conflicts()
-        #print('UNITS:', self.units)
-        #print()
         while conflicts:
-            #print('MOVES:', self.moves)
             print('---FINDING CONFLICTS---')
-            conflicts = self.find_conflicts()
             conflicts = self.resolve_conflicts(conflicts)
-            #print()
         for unit, order in self.moves.items():
             if type(order) == Move:
                 self.results[unit] = order.to
@@ -77,17 +72,14 @@ class Env:
         conflicting_region = conflicts.pop()
         conflicting_orders = self.get_conflicting_orders(conflicting_region)
         self.calculate_strengths()
-        
+        strongest_orders = [item for item in self.strengths.items() if \
+                            item[1] == max(self.strengths.values())]
+
         print('CONFLICTING REGION:', conflicting_region)
         print('CONFLICTING ORDERS: ', conflicting_orders)
         print('STRENGTHS:', self.strengths)
-        
-        max_strength = max(self.strengths.values())
-        strongest_orders = [item for item in self.strengths.items() if \
-                            item[1] == max_strength]
-
         print('STRONGEST_ORDERS:', strongest_orders)
-        
+
         if len(strongest_orders) == 1:
             strongest_unit, _ = strongest_orders[0]
             self.moves[strongest_unit].resolved = True

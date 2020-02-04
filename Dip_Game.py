@@ -69,11 +69,11 @@ if __name__ == '__main__':
     #game.initiate_prints()
     #game.reset_order_sheet()
 
-    test_hold_units(game)
+    #test_hold_units(game)
     #test_move_units_1(game)
     #test_move_units_2(game)
     #test_move_units_3(game)
     #test_move_units_4(game)
     #test_move_units_5(game)
-    #test_support_1(game)
+    test_support_1(game)
     
