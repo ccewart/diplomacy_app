@@ -40,8 +40,9 @@ class Env:
         #print()
         while conflicts:
             #print('MOVES:', self.moves)
+            print('---FINDING CONFLICTS---')
             conflicts = self.find_conflicts()
-            self.resolve_conflicts(conflicts)
+            conflicts = self.resolve_conflicts(conflicts)
             #print()
         for unit, order in self.moves.items():
             if type(order) == Move:
@@ -84,18 +85,17 @@ class Env:
         max_strength = max(self.strengths.values())
         strongest_orders = [item for item in self.strengths.items() if \
                             item[1] == max_strength]
-        
-        print('MAX_STRENGTH:', max_strength)
+
         print('STRONGEST_ORDERS:', strongest_orders)
         
         if len(strongest_orders) == 1:
             strongest_unit, _ = strongest_orders[0]
             self.moves[strongest_unit].resolved = True
         for unit, order in conflicting_orders:
-            print('order resolved:', order.resolved)
             if type(order) == Move and order.resolved == False:
-                print('unit, order:', unit, order.details())
                 self.moves[unit].to = self.moves[unit].region
+
+        return self.find_conflicts()
 
 
     def get_conflicting_orders(self, conflicting_region):
