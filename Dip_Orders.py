@@ -27,4 +27,4 @@ class Move(Order):
 class Support(Order):
     def details(self):
         return f'Player {self.player}\'s unit at {self.region} supports from \
-        {self.from_} to {self.to}'
+{self.from_} to {self.to}'
