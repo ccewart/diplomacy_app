@@ -17,7 +17,7 @@ class Env:
                                  unit=None, water=False,
                                  coastal=True, home=0,
                                  neighbours=['Clyde', 'Liverpool', 'Yorkshire'])),
-            ('Yorkshire', Region(name = 'Yorkshire', owner=None, supply=False,
+            ('Yorkshire', Region(name = 'Yorkshire', owner=None, supply=True,
                                  unit=None, water=False, coastal=True, home=None,
                                  neighbours=['Clyde', 'Edinburgh', 'Liverpool'])),
             ('Liverpool', Region(name = 'Liverpool', owner=1, supply=True,
@@ -35,9 +35,9 @@ class Env:
 
     def resolve_orders(self, players):
         self.collect_orders(players)
+        print('---FINDING CONFLICTS---')
         conflicts = self.find_conflicts()
         while conflicts:
-            print('---FINDING CONFLICTS---')
             conflicts = self.resolve_conflicts(conflicts)
         for unit, order in self.moves.items():
             if type(order) == Move:
@@ -62,7 +62,7 @@ class Env:
         for order in self.moves.values():
             if type(order) == Move:
                 lst.append(order.to)
-            if type(order) == Hold:
+            if type(order) == Hold or type(order) == Support:
                 lst.append(order.region)
         return set([i for i in lst if lst.count(i)>1])
 
@@ -107,8 +107,19 @@ class Env:
                 region = order.from_
                 supported_unit = self.get_unit_by_region(region)
                 self.strengths[supported_unit] += 1
-        for unit, strength in self.strengths.items():
-            self.moves[unit].strength = strength
+            if type(order) == Move and self.regions[order.to].unit:
+                affected_unit = self.get_unit_by_region(order.to)
+                supported_unit = self.get_supported_unit(affected_unit)
+                if type(self.moves[affected_unit]) == Support:
+                    self.strengths[supported_unit] -= 1
+
+
+    def get_supported_unit(self, unit):
+        from_ = self.moves[unit].from_
+        to = self.moves[unit].to
+        for unit, order in self.moves.items():
+            if order.region == from_ and order.to == to:
+                return unit
 
 
     def update_regions(self):
@@ -136,7 +147,8 @@ class Env:
 
 
     def get_unit_by_region(self, region):
-        return hash(self.regions[region].unit)
+        return hash(self.regions[region].unit) if \
+        self.regions[region].unit else None
         
 
     def print_board(self):
