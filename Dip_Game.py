@@ -74,4 +74,5 @@ if __name__ == '__main__':
     #test_move_units_5(game)
     #test_support_1(game)
     #test_support_2(game)
-    test_support_3(game)
+    #test_support_3(game)
+    test_support_4(game)
