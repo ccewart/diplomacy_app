@@ -161,9 +161,11 @@ def test_support_1(game):
     game.game_map.resolve_orders(game.players)
     game.board
 
+    assert game.game_map.regions['Clyde'].unit == hash(unit3)
+    assert game.game_map.regions['Edinburgh'].unit == None
     assert game.game_map.regions['Yorkshire'].unit == hash(unit1)
     assert game.game_map.regions['Liverpool'].unit == hash(unit2)
-    assert game.game_map.regions['Clyde'].unit == hash(unit3)
+    
     print('-----SUPPORT UNITS TEST 1 PASSED-----')
 
 
@@ -184,6 +186,7 @@ def test_support_2(game):
     game.game_map.resolve_orders(game.players)
     game.board
 
+    assert game.game_map.regions['Clyde'].unit == None
     assert game.game_map.regions['Edinburgh'].unit == hash(unit1)
     assert game.game_map.regions['Liverpool'].unit == hash(unit2)
     assert game.game_map.regions['Yorkshire'].unit == hash(unit3)
@@ -191,7 +194,6 @@ def test_support_2(game):
     strengths = ([strength for strength in game.game_map.strengths.values()])
     assert strengths == [1, 1, 1]
 
-    
     print('-----SUPPORT UNITS TEST 2 PASSED-----')
 
 
@@ -212,13 +214,10 @@ def test_support_3(game):
     game.game_map.resolve_orders(game.players)
     game.board
 
-    assert game.game_map.regions['Yorkshire'].unit == hash(unit1)
-    assert game.game_map.regions['Edinburgh'].unit == hash(unit2)
     assert game.game_map.regions['Clyde'].unit == hash(unit3)
-
-    #strengths = ([strength for strength in game.game_map.strengths.values()])
-    #assert strengths == [1, 1, 1]
-
+    assert game.game_map.regions['Edinburgh'].unit == hash(unit2)
+    assert game.game_map.regions['Yorkshire'].unit == hash(unit1)
+    assert game.game_map.regions['Liverpool'].unit == None
     
     print('-----SUPPORT UNITS TEST 3 PASSED-----')
 
@@ -240,12 +239,11 @@ def test_support_4(game):
     game.game_map.resolve_orders(game.players)
     game.board
 
-    assert game.game_map.regions['Edinburgh'].unit == hash(unit1)
-    assert game.game_map.regions['Liverpool'].unit == hash(unit2)
-    assert game.game_map.regions['Yorkshire'].unit == hash(unit3)
+    assert game.game_map.regions['Clyde'].unit == hash(unit3)
+    assert game.game_map.regions['Edinburgh'].unit == None
+    assert game.game_map.regions['Yorkshire'].unit == None
+    assert game.game_map.regions['Liverpool'].unit == hash(unit1)
 
-    strengths = ([strength for strength in game.game_map.strengths.values()])
-    assert strengths == [1, 1, 1]
+    assert [key for key in game.game_map.dislodged.keys()][0] == hash(unit2)
 
-    
     print('-----SUPPORT UNITS TEST 4 PASSED-----')

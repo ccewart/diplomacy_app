@@ -9,6 +9,7 @@ class Env:
         self.units = {}
         self.strengths = {}
         self.results = {}
+        self.dislodged = {}
         self.regions = OrderedDict([
             ('Clyde', Region(name = 'Clyde', owner=0, supply=True,
                              unit=None, water=False, coastal=True, home=None,
@@ -45,6 +46,7 @@ class Env:
             if type(order) == Hold or type(order) == Support:
                 self.results[unit] = order.region
         print('RESULTS:', self.results)
+        print('DISLODGED:', self.dislodged)
         self.update_regions()
 
 
@@ -74,19 +76,28 @@ class Env:
         strongest_orders = [item for item in self.strengths.items() if \
                             item[1] == max(self.strengths.values())]
 
+        # unoccupied space, strongest move wont bounce
+        if len(strongest_orders) == 1:
+            strongest_unit = strongest_orders[0][0]
+            self.moves[strongest_unit].resolved = True
+        
+        # occupied space, strongest move wont bounce, unit dislodged
+        if len(strongest_orders) == 1 and self.regions[conflicting_region].unit:
+            strongest_unit = strongest_orders[0][0]
+            dislodged_unit = hash(self.regions[conflicting_region].unit)
+            self.moves[strongest_unit].resolved = True
+            dislodged_moves = self.moves.pop(dislodged_unit)
+            self.dislodged[dislodged_unit] = dislodged_moves
+            
+        # bounce unsuccessful move orders
+        for unit, order in conflicting_orders:
+            if type(order) == Move and order.resolved == False:
+                self.moves[unit].to = self.moves[unit].region
+            
         print('CONFLICTING REGION:', conflicting_region)
         print('CONFLICTING ORDERS: ', conflicting_orders)
         print('STRENGTHS:', self.strengths)
         print('STRONGEST_ORDERS:', strongest_orders)
-
-
-        # strongest move succeeds, else all bounce
-        if len(strongest_orders) == 1:
-            strongest_unit, _ = strongest_orders[0]
-            self.moves[strongest_unit].resolved = True
-        for unit, order in conflicting_orders:
-            if type(order) == Move and order.resolved == False:
-                self.moves[unit].to = self.moves[unit].region
 
         return self.find_conflicts()
 
