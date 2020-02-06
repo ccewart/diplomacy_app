@@ -13,13 +13,16 @@ class Game:
         self.players = []
         self.game_map = Env(nb_players)
         self.nb_players = nb_players
-        names = ['Charles', 'Sam']
-        for i in range(self.nb_players):
-            self.players.append(Player(names[i], i))
 
 
     def reset_order_sheet(self):
         self.order_sheet = []
+
+
+    def initiate(self):
+        names = ['Charles', 'Sam']
+        for i in range(self.nb_players):
+            self.players.append(Player(names[i], i))
 
 
     def initiate_prints(self):
@@ -59,28 +62,23 @@ class Game:
             game.players[player].units.append(unit)
 
 
-def run_all_tests(game):
-    text_trap = io.StringIO()
-    sys.stdout = text_trap
-    
-    game = Game(2)
-    test_move_units_1(game)
-##    test_move_units_2(game)
-##    test_move_units_3(game)
-##    test_move_units_4(game)
-##    test_move_units_5(game)
-##    test_support_1(game)
-##    test_support_2(game)
-##    test_support_3(game)
+    def run_all_tests(game):
+        test_move_units_1(game)
+        test_move_units_2(game)
+        test_move_units_3(game)
+        test_move_units_4(game)
+        test_move_units_5(game)
+        test_support_1(game)
+        test_support_2(game)
+        test_support_3(game)
 
 
 if __name__ == '__main__':
-    
+    game = Game(2)
+    game.initiate()
     #game.initiate_prints()
     #game.reset_order_sheet()
-    run_all_tests(game)
 
-    #game = Game(2)
     #test_hold_units(game)
     #test_move_units_1(game)
     #test_move_units_2(game)
