@@ -79,11 +79,11 @@ class Env:
         print('STRENGTHS:', self.strengths)
         print('STRONGEST_ORDERS:', strongest_orders)
 
-        
+
+        # strongest move succeeds, else all bounce
         if len(strongest_orders) == 1:
             strongest_unit, _ = strongest_orders[0]
             self.moves[strongest_unit].resolved = True
-        
         for unit, order in conflicting_orders:
             if type(order) == Move and order.resolved == False:
                 self.moves[unit].to = self.moves[unit].region
