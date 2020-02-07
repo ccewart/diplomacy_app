@@ -24,7 +24,15 @@ class Env:
             ('Liverpool', Region(name = 'Liverpool', owner=1, supply=True,
                                  unit=None, water=False,
                                  coastal=True, home=0,
-                                 neighbours=['Clyde', 'Edinburgh', 'Yorkshire']))
+                                 neighbours=['Clyde', 'Edinburgh', 'Yorkshire'])),
+            ('Norwegian Sea', Region(name = 'Norwegian Sea', owner=1, supply=True,
+                                 unit=None, water=False,
+                                 coastal=True, home=0,
+                                 neighbours=['Edinburgh', 'Liverpool'])),
+            ('North Sea', Region(name = 'Liverpool', owner=1, supply=True,
+                                 unit=None, water=False,
+                                 coastal=True, home=0,
+                                 neighbours=['Edinburgh', 'Liverpool']))
             ])
 
 
@@ -146,12 +154,13 @@ class Env:
         
 
     def create_unit(self, order):
-        if self.regions[order.region].supply == True and \
-        self.regions[order.region].unit == None and \
-        self.regions[order.region].owner == order.player:
-            new_army = Army(order.player, order.region)
-            self.regions[order.region].unit = new_army
-            self.results[hash(new_army)] = (new_army, order.region, order.player)
+        # bring back these checks near end
+        #if self.regions[order.region].supply == True and \
+        #self.regions[order.region].unit == None and \
+        #self.regions[order.region].owner == order.player:
+        new_army = Army(order.player, order.region)
+        self.regions[order.region].unit = new_army
+        self.results[hash(new_army)] = (new_army, order.region, order.player)
    
 
     def reset_results(self):
@@ -177,3 +186,22 @@ class Env:
         print('          |') if not self.regions['Liverpool'].unit \
         else print('    A     |')
         print('-----------------------')
+
+    def print_extended_board(self):
+        print('----------------------------------')
+        print('|  Clyde   |   Edin   |  Nwg Sea |')
+        print('|          |', end = '') if not self.regions['Clyde'].unit \
+        else print('|    A     |', end = '')
+        print('          |', end = '') if not self.regions['Edinburgh'].unit \
+        else print('    A     |', end = '')
+        print('          |') if not self.regions['Norwegian Sea'].unit \
+        else print('     A    |')
+        print('----------------------------------')
+        print('| Yorkshire| Liverpool|  Nth Sea |')
+        print('|          |', end = '') if not self.regions['Yorkshire'].unit \
+        else print('|    A     |', end = '')
+        print('          |', end = '') if not self.regions['Liverpool'].unit \
+        else print('    A     |', end = '')
+        print('          |') if not self.regions['North Sea'].unit \
+        else print('     A    |')
+        print('----------------------------------')

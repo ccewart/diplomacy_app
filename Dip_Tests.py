@@ -13,13 +13,22 @@ def test_create_units(game, nb_units=2):
     if nb_units == 3:
         order3 = Create_Unit(0, 'Clyde')
         game.players[0].orders.append(order3)
+    elif nb_units == 6:
+        order3 = Create_Unit(0, 'Clyde')
+        game.players[0].orders.append(order3)
+        order4 = Create_Unit(1, 'Yorkshire')
+        game.players[1].orders.append(order4)
+        order5 = Create_Unit(1, 'Norwegian Sea')
+        game.players[1].orders.append(order5)
+        order6 = Create_Unit(1, 'North Sea')
+        game.players[1].orders.append(order6)
 
     game.collect_build_orders()
     print([order.details() for order in game.order_sheet])
 
     game.game_map.resolve_builds(game.order_sheet)
     game.board
-
+    
     game.collect_results()
     
     game.game_map.reset_results()
@@ -263,6 +272,47 @@ def test_support_4(game):
     print('-----SUPPORT UNITS TEST 4 PASSED-----')
 
 
+def test_support_5(game):
+    test_create_units(game, 6)
+    print('-----SUPPORT UNITS TEST 5-----')
+
+    # Edin
+    unit1 = game.players[0].units[0]
+    print('unit1:', unit1.region)
+    # Clyde
+    unit2 = game.players[0].units[1]
+    print('unit2:', unit2.region)
+    # Liverpool
+    unit3 = game.players[1].units[0]
+    print('unit3:', unit3.region)
+    # Yorkshire
+    unit4 = game.players[1].units[1]
+    print('unit4:', unit4.region)
+    # Norwegian Sea
+    unit5 = game.players[1].units[2]
+    print('unit5:', unit5.region)
+    # North Sea
+    unit6 = game.players[1].units[3]
+    print('unit6:', unit6.region)
+    
+    order1 = Move(0, 'Edinburgh', to='Yorkshire')
+    order2 = Support(0, 'Clyde', from_='Edinburgh', to='Yorkshire')
+    order3 = Support(1, 'Liverpool', from_='Yorkshire', to='Yorkshire')
+    order4 = Hold(1, 'Yorkshire')
+    order5 = Move(1, 'Norwegian Sea', to='Edinburgh')
+    order6 = Support(1, 'North Sea', from_= 'Norwegian Sea', to='Edinburgh') 
+    unit1.orders = order1
+    unit2.orders = order2
+    unit3.orders = order3
+    unit4.orders = order4
+    unit5.orders = order5
+    unit6.orders = order6
+
+    game.game_map.resolve_orders(game.players)
+    game.game_map.print_extended_board()
+
+
+    print('-----SUPPORT UNITS TEST 5 PASSED-----')
 
 
 
