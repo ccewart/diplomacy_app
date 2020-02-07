@@ -40,10 +40,12 @@ def test_move_units_1(game):
     game.game_map.resolve_orders(game.players)
     game.board
 
+
     assert game.game_map.regions['Clyde'].unit == hash(unit1)
+    assert game.game_map.regions['Edinburgh'].unit == None
     assert game.game_map.regions['Yorkshire'].unit == hash(unit2)
+    assert game.game_map.regions['Liverpool'].unit == None
     print('-----MOVE UNITS TEST 1 PASSED-----')
-    return True
 
 
 def test_move_units_2(game):
@@ -60,10 +62,11 @@ def test_move_units_2(game):
     game.game_map.resolve_orders(game.players)
     game.board
 
+    assert game.game_map.regions['Clyde'].unit == None
     assert game.game_map.regions['Edinburgh'].unit == hash(unit1)
+    assert game.game_map.regions['Yorkshire'].unit == None
     assert game.game_map.regions['Liverpool'].unit == hash(unit2)
     print('-----MOVE UNITS TEST 2 PASSED-----')
-    return True
 
 
 def test_move_units_3(game):
@@ -80,10 +83,12 @@ def test_move_units_3(game):
     game.game_map.resolve_orders(game.players)
     game.board
 
-    assert game.game_map.regions['Liverpool'].unit == hash(unit1)
+    assert game.game_map.regions['Clyde'].unit == None
+    assert game.game_map.regions['Edinburgh'].unit == None
     assert game.game_map.regions['Yorkshire'].unit == hash(unit2)
+    assert game.game_map.regions['Liverpool'].unit == hash(unit1)
+    
     print('-----MOVE UNITS TEST 3 PASSED-----')
-    return True
 
 
 def test_move_units_4(game):
@@ -100,10 +105,11 @@ def test_move_units_4(game):
     game.game_map.resolve_orders(game.players)
     game.board
 
+    assert game.game_map.regions['Clyde'].unit == None
     assert game.game_map.regions['Edinburgh'].unit == hash(unit1)
+    assert game.game_map.regions['Yorkshire'].unit == None
     assert game.game_map.regions['Liverpool'].unit == hash(unit2)
     print('-----MOVE UNITS TEST 4 PASSED-----')
-    return True
 
 
 def test_move_units_5(game):
@@ -123,11 +129,12 @@ def test_move_units_5(game):
     game.game_map.resolve_orders(game.players)
     game.board
 
-    assert game.game_map.regions['Edinburgh'].unit == hash(unit1)
-    assert game.game_map.regions['Liverpool'].unit == hash(unit2)
     assert game.game_map.regions['Clyde'].unit == hash(unit3)
+    assert game.game_map.regions['Edinburgh'].unit == hash(unit1)
+    assert game.game_map.regions['Yorkshire'].unit == None
+    assert game.game_map.regions['Liverpool'].unit == hash(unit2)
+    
     print('-----MOVE UNITS TEST 5 PASSED-----')
-    return True
     
 
 def test_hold_units(game):
@@ -144,10 +151,11 @@ def test_hold_units(game):
     game.game_map.resolve_orders(game.players)
     game.board
 
+    assert game.game_map.regions['Clyde'].unit == None
     assert game.game_map.regions['Edinburgh'].unit == hash(unit1)
+    assert game.game_map.regions['Yorkshire'].unit == None
     assert game.game_map.regions['Liverpool'].unit == hash(unit2)
     print('-----HOLD UNITS TEST 1 PASSED-----')
-    return True
 
 
 def test_support_1(game):
@@ -173,7 +181,6 @@ def test_support_1(game):
     assert game.game_map.regions['Liverpool'].unit == hash(unit2)
     
     print('-----SUPPORT UNITS TEST 1 PASSED-----')
-    return True
 
 
 def test_support_2(game):
@@ -195,14 +202,13 @@ def test_support_2(game):
 
     assert game.game_map.regions['Clyde'].unit == None
     assert game.game_map.regions['Edinburgh'].unit == hash(unit1)
-    assert game.game_map.regions['Liverpool'].unit == hash(unit2)
     assert game.game_map.regions['Yorkshire'].unit == hash(unit3)
-
+    assert game.game_map.regions['Liverpool'].unit == hash(unit2)
+    
     strengths = ([strength for strength in game.game_map.strengths.values()])
     assert strengths == [1, 1, 1]
 
     print('-----SUPPORT UNITS TEST 2 PASSED-----')
-    return True
 
 
 def test_support_3(game):
@@ -228,7 +234,6 @@ def test_support_3(game):
     assert game.game_map.regions['Liverpool'].unit == None
     
     print('-----SUPPORT UNITS TEST 3 PASSED-----')
-    return True
 
 
 def test_support_4(game):
@@ -256,7 +261,6 @@ def test_support_4(game):
     assert [key for key in game.game_map.dislodged.keys()][0] == hash(unit2)
 
     print('-----SUPPORT UNITS TEST 4 PASSED-----')
-    return True
 
 
 

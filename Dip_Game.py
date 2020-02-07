@@ -59,8 +59,6 @@ class Game:
             self.players[player].units.append(unit)
 
 
-
-
 def test_wrapper(func):
     old_stdout = sys.stdout
     def disable_prints():
@@ -70,18 +68,21 @@ def test_wrapper(func):
     def enable_prints():
         sys.stdout = old_stdout
     
-    def function(game):
+    def function():
         disable_prints()
-        passed = func(game)
-        enable_prints()
-        result = 'passed' if passed else 'failed'
-        print('MOVE UNITS TEST 1:', result)
+        game = Game(2)
+        try:
+            func(game)
+            enable_prints()
+            print(func.__name__, ': passed')
+        except Exception:
+            enable_prints()
+            print(func.__name__, ': failed')
     return function
 
 
 def run_all_tests():
-    game = Game(2)
-
+    decorated_test_hold_units = test_wrapper(test_hold_units)
     decorated_test_move_units_1 = test_wrapper(test_move_units_1)
     decorated_test_move_units_2 = test_wrapper(test_move_units_2)
     decorated_test_move_units_3 = test_wrapper(test_move_units_3)
@@ -90,19 +91,22 @@ def run_all_tests():
     decorated_test_support_1 = test_wrapper(test_support_1)
     decorated_test_support_2 = test_wrapper(test_support_2)
     decorated_test_support_3 = test_wrapper(test_support_3)
+    decorated_test_support_4 = test_wrapper(test_support_4)
 
-    decorated_test_move_units_1(game)
-    decorated_test_move_units_2(game)
-    decorated_test_move_units_3(game)
-    decorated_test_move_units_4(game)
-    decorated_test_move_units_5(game)
-    decorated_test_support_1(game)
-    decorated_test_support_2(game)
-    decorated_test_support_3(game)
+    decorated_test_hold_units()
+    decorated_test_move_units_1()
+    decorated_test_move_units_2()
+    decorated_test_move_units_3()
+    decorated_test_move_units_4()
+    decorated_test_move_units_5()
+    decorated_test_support_1()
+    decorated_test_support_2()
+    decorated_test_support_3()
+    decorated_test_support_4()
 
 
 if __name__ == '__main__':
-    #game = Game(2)
+    game = Game(2)
     #game.initiate_prints()
     #game.reset_order_sheet()
 
