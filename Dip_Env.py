@@ -119,6 +119,10 @@ class Env:
         return conflicting_orders
 
 
+    def calculate_local_strengths(self, conflicting_region):
+        pass
+        
+
     def calculate_strengths(self):
         for unit in self.moves:
             self.strengths[unit] = 1
