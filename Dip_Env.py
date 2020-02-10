@@ -131,11 +131,21 @@ class Env:
         for unit, _ in conflicting_orders:
             local_strengths[unit] = 1
         for unit, order in conflicting_orders:
-            if type(order) == Support:
+
+            # case when support order is the conflicting region
+            if type(order) == Support and order.region == conflicting_region:
+                print('----CASE 1----')
+                pass
+
+            # case when order is supporting the conflicting region
+            if type(order) == Support and order.to == conflicting_region:
+                print('----CASE 2----')
                 region = order.from_
                 print('region:', region)
                 supported_unit = self.get_unit_by_region(region)
                 local_strengths[supported_unit] += 1
+
+            
             if type(order) == Move and self.regions[order.to].unit:
                 affected_unit = self.get_unit_by_region(order.to)
                 supported_unit = self.get_supported_unit(affected_unit)
