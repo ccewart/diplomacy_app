@@ -3,36 +3,10 @@ from Dip_Env import Env
 from Dip_Orders import Order, Create_Unit, Hold, Move, Support
 
 
-
-
-def test_create_units(game, nb_units=2):
-    print('-----create units test-----')
-    order1 = Create_Unit(0, 'Edinburgh')
-    order2 = Create_Unit(1, 'Liverpool')
-    
-    game.players[0].orders.append(order1)
-    game.players[1].orders.append(order2)
-    if nb_units == 3:
-        order3 = Create_Unit(0, 'Clyde')
-        game.players[0].orders.append(order3)
-    elif nb_units == 5:
-        game.players[1].orders.pop()
-        order2 = Create_Unit(0, 'Clyde')
-        order3 = Create_Unit(1, 'Yorkshire')
-        game.players[1].orders.append(order3)
-        order4 = Create_Unit(1, 'Norwegian Sea')
-        game.players[1].orders.append(order4)
-        order5 = Create_Unit(1, 'North Sea')
-        game.players[1].orders.append(order5)
-    elif nb_units == 6:
-        order3 = Create_Unit(0, 'Clyde')
-        game.players[0].orders.append(order3)
-        order4 = Create_Unit(1, 'Yorkshire')
-        game.players[1].orders.append(order4)
-        order5 = Create_Unit(1, 'Norwegian Sea')
-        game.players[1].orders.append(order5)
-        order6 = Create_Unit(1, 'North Sea')
-        game.players[1].orders.append(order6)
+def test_create_units(game, build_orders):
+    for player, region in build_orders:
+        order = Create_Unit(player, region)
+        game.players[player].orders.append(order)
 
     game.collect_build_orders()
     print([order.details() for order in game.order_sheet])
@@ -44,10 +18,12 @@ def test_create_units(game, nb_units=2):
     
     game.game_map.reset_results()
     print()
-    
+
 
 def test_move_units_1(game):
-    test_create_units(game)
+    move_1_units = [(0, 'Edinburgh'), (1, 'Liverpool')]
+    test_create_units(game, move_1_units)
+    
     print('-----MOVE UNITS TEST 1-----')
     
     unit1 = game.players[0].units[0]
@@ -69,7 +45,9 @@ def test_move_units_1(game):
 
 
 def test_move_units_2(game):
-    test_create_units(game)
+    move_2_units = [(0, 'Edinburgh'), (1, 'Liverpool')]
+    test_create_units(game, move_2_units)
+    
     print('-----MOVE UNITS TEST 2-----')
 
     unit1 = game.players[0].units[0]
@@ -90,7 +68,9 @@ def test_move_units_2(game):
 
 
 def test_move_units_3(game):
-    test_create_units(game)
+    move_3_units = [(0, 'Edinburgh'), (1, 'Liverpool')]
+    test_create_units(game, move_3_units)
+    
     print('-----MOVE UNITS TEST 3-----')
     
     unit1 = game.players[0].units[0]
@@ -112,7 +92,9 @@ def test_move_units_3(game):
 
 
 def test_move_units_4(game):
-    test_create_units(game)
+    move_4_units = [(0, 'Edinburgh'), (1, 'Liverpool')]
+    test_create_units(game, move_4_units)
+
     print('-----MOVE UNITS TEST 4-----')
 
     unit1 = game.players[0].units[0]
@@ -133,7 +115,9 @@ def test_move_units_4(game):
 
 
 def test_move_units_5(game):
-    test_create_units(game, 3)
+    move_5_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Liverpool')]
+    test_create_units(game, move_5_units)
+    
     print('-----MOVE UNITS TEST 5-----')
 
     unit1 = game.players[0].units[0]
@@ -158,7 +142,9 @@ def test_move_units_5(game):
     
 
 def test_hold_units(game):
-    test_create_units(game, 2)
+    hold_units = [(0, 'Edinburgh'), (1, 'Liverpool')]
+    test_create_units(game, hold_units)
+    
     print('-----HOLD UNITS TEST 1-----')
 
     unit1 = game.players[0].units[0]
@@ -179,7 +165,9 @@ def test_hold_units(game):
 
 
 def test_support_1(game):
-    test_create_units(game, 3)
+    support_1_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Liverpool')]
+    test_create_units(game, support_1_units)
+
     print('-----SUPPORT UNITS TEST 1-----')
 
     unit1 = game.players[0].units[0]
@@ -204,7 +192,9 @@ def test_support_1(game):
 
 
 def test_support_2(game):
-    test_create_units(game, 3)
+    support_2_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Liverpool')]
+    test_create_units(game, support_2_units)
+    
     print('-----SUPPORT UNITS TEST 2-----')
 
     unit1 = game.players[0].units[0]
@@ -229,7 +219,9 @@ def test_support_2(game):
 
 
 def test_support_3(game):
-    test_create_units(game, 3)
+    support_3_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Liverpool')]
+    test_create_units(game, support_3_units)
+    
     print('-----SUPPORT UNITS TEST 3-----')
 
     unit1 = game.players[0].units[0]
@@ -254,7 +246,9 @@ def test_support_3(game):
 
 
 def test_support_4(game):
-    test_create_units(game, 3)
+    support_4_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Liverpool')]
+    test_create_units(game, support_4_units)
+
     print('-----SUPPORT UNITS TEST 4-----')
 
     unit1 = game.players[0].units[0]
@@ -281,7 +275,11 @@ def test_support_4(game):
 
 
 def test_support_5(game):
-    test_create_units(game, 6)
+    support_5_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Liverpool'),\
+                       (1, 'Yorkshire'), (1, 'Norwegian Sea'), (1, 'North Sea')]
+
+    test_create_units(game, support_5_units)
+    
     print('-----SUPPORT UNITS TEST 5-----')
 
     # Edin
@@ -333,7 +331,10 @@ def test_support_5(game):
 
 
 def test_support_6(game):
-    test_create_units(game, 5)
+    support_6_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Yorkshire'), \
+                   (1, 'Norwegian Sea'), (1, 'North Sea')]
+    
+    test_create_units(game, support_6_units)
     print('-----SUPPORT UNITS TEST 6-----')
 
     # Edin
