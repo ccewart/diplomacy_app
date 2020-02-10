@@ -77,12 +77,20 @@ class Env:
 
 
     def resolve_conflicts(self, conflicts):
+        #print('MOVES:', self.moves)
         print('CONFLICTS:', conflicts)
         conflicting_region = conflicts.pop()
         conflicting_orders = self.get_conflicting_orders(conflicting_region)
-        self.calculate_strengths()
-        strongest_orders = [item for item in self.strengths.items() if \
-                            item[1] == max(self.strengths.values())]
+
+        local_strengths = self.calculate_local_strengths(conflicting_region,\
+                                                         conflicting_orders)
+        strongest_orders = [item for item in local_strengths.items() if \
+                            item[1] == max(local_strengths.values())]
+
+        print('LOCAL STRENGTHS:', local_strengths)
+        print('CONFLICTING REGION:', conflicting_region)
+        print('CONFLICTING ORDERS: ', conflicting_orders)
+        print('STRONGEST_ORDERS:', strongest_orders)
 
         # unoccupied space, strongest move wont bounce
         if len(strongest_orders) == 1:
@@ -96,17 +104,15 @@ class Env:
             self.moves[strongest_unit].resolved = True
             dislodged_moves = self.moves.pop(dislodged_unit)
             self.dislodged[dislodged_unit] = dislodged_moves
-            
+            conflicting_orders = [item for item in conflicting_orders if item[0]\
+                                  not in [key for key in self.dislodged.keys()]]
+
         # bounce unsuccessful move orders
         for unit, order in conflicting_orders:
             if type(order) == Move and order.resolved == False:
                 self.moves[unit].to = self.moves[unit].region
-            
-        print('CONFLICTING REGION:', conflicting_region)
-        print('CONFLICTING ORDERS: ', conflicting_orders)
-        print('STRENGTHS:', self.strengths)
-        print('STRONGEST_ORDERS:', strongest_orders)
-
+        
+        print()
         return self.find_conflicts()
 
 
@@ -119,8 +125,23 @@ class Env:
         return conflicting_orders
 
 
-    def calculate_local_strengths(self, conflicting_region):
-        pass
+    def calculate_local_strengths(self, conflicting_region, conflicting_orders):
+        local_strengths = {}
+        print('CONFLICTING ORDERS:', conflicting_orders)
+        for unit, _ in conflicting_orders:
+            local_strengths[unit] = 1
+        for unit, order in conflicting_orders:
+            if type(order) == Support:
+                region = order.from_
+                print('region:', region)
+                supported_unit = self.get_unit_by_region(region)
+                local_strengths[supported_unit] += 1
+            if type(order) == Move and self.regions[order.to].unit:
+                affected_unit = self.get_unit_by_region(order.to)
+                supported_unit = self.get_supported_unit(affected_unit)
+                if type(self.moves[affected_unit]) == Support:
+                    local_strengths[supported_unit] -= 1
+        return local_strengths
         
 
     def calculate_strengths(self):

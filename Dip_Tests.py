@@ -213,9 +213,6 @@ def test_support_2(game):
     assert game.game_map.regions['Edinburgh'].unit == hash(unit1)
     assert game.game_map.regions['Yorkshire'].unit == hash(unit3)
     assert game.game_map.regions['Liverpool'].unit == hash(unit2)
-    
-    strengths = ([strength for strength in game.game_map.strengths.values()])
-    assert strengths == [1, 1, 1]
 
     print('-----SUPPORT UNITS TEST 2 PASSED-----')
 
@@ -310,6 +307,15 @@ def test_support_5(game):
 
     game.game_map.resolve_orders(game.players)
     game.game_map.print_extended_board()
+
+    assert game.game_map.regions['Clyde'].unit == hash(unit2)
+    assert game.game_map.regions['Edinburgh'].unit == hash(unit5)
+    assert game.game_map.regions['Yorkshire'].unit == hash(unit4)
+    assert game.game_map.regions['Liverpool'].unit == hash(unit3)
+    assert game.game_map.regions['Norwegian Sea'].unit == None
+    assert game.game_map.regions['North Sea'].unit == hash(unit6)
+
+    assert [key for key in game.game_map.dislodged.keys()][0] == hash(unit1)
 
 
     print('-----SUPPORT UNITS TEST 5 PASSED-----')
