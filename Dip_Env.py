@@ -44,6 +44,7 @@ class Env:
 
     def resolve_orders(self, players):
         self.collect_orders(players)
+        self.cut_support()
         print('---FINDING CONFLICTS---')
         conflicts = self.find_conflicts()
         while conflicts:
@@ -116,6 +117,19 @@ class Env:
         return self.find_conflicts()
 
 
+    def cut_support(self):
+        for _, order in self.moves.items():
+            print('order:', order.details())
+        for unit, order in self.moves.items():
+            if type(order) == Move and self.regions[order.to].unit:
+                affected_unit = self.get_unit_by_region(order.to)
+                supported_unit = self.get_supported_unit(affected_unit)
+                if type(self.moves[affected_unit]) == Support:
+                    self.moves[affected_unit].from_ = None
+                    self.moves[affected_unit].to = None
+                    print('CUTTING ORDER:', self.moves[affected_unit])
+        
+
     def get_conflicting_orders(self, conflicting_region):
         conflicting_orders = []
         for unit, order in self.moves.items():
@@ -134,23 +148,16 @@ class Env:
 
             # case when support order is the conflicting region
             if type(order) == Support and order.region == conflicting_region:
-                print('----CASE 1----')
+                #print('----CASE 1----')
                 pass
 
             # case when order is supporting the conflicting region
             if type(order) == Support and order.to == conflicting_region:
-                print('----CASE 2----')
+                #print('----CASE 2----')
                 region = order.from_
-                print('region:', region)
                 supported_unit = self.get_unit_by_region(region)
                 local_strengths[supported_unit] += 1
 
-            
-            if type(order) == Move and self.regions[order.to].unit:
-                affected_unit = self.get_unit_by_region(order.to)
-                supported_unit = self.get_supported_unit(affected_unit)
-                if type(self.moves[affected_unit]) == Support:
-                    local_strengths[supported_unit] -= 1
         return local_strengths
         
 

@@ -23,7 +23,6 @@ def test_create_units(game, build_orders):
 def test_move_units_1(game):
     move_1_units = [(0, 'Edinburgh'), (1, 'Liverpool')]
     test_create_units(game, move_1_units)
-    
     print('-----MOVE UNITS TEST 1-----')
     
     unit1 = game.players[0].units[0]
@@ -47,7 +46,6 @@ def test_move_units_1(game):
 def test_move_units_2(game):
     move_2_units = [(0, 'Edinburgh'), (1, 'Liverpool')]
     test_create_units(game, move_2_units)
-    
     print('-----MOVE UNITS TEST 2-----')
 
     unit1 = game.players[0].units[0]
@@ -70,7 +68,6 @@ def test_move_units_2(game):
 def test_move_units_3(game):
     move_3_units = [(0, 'Edinburgh'), (1, 'Liverpool')]
     test_create_units(game, move_3_units)
-    
     print('-----MOVE UNITS TEST 3-----')
     
     unit1 = game.players[0].units[0]
@@ -94,7 +91,6 @@ def test_move_units_3(game):
 def test_move_units_4(game):
     move_4_units = [(0, 'Edinburgh'), (1, 'Liverpool')]
     test_create_units(game, move_4_units)
-
     print('-----MOVE UNITS TEST 4-----')
 
     unit1 = game.players[0].units[0]
@@ -117,7 +113,6 @@ def test_move_units_4(game):
 def test_move_units_5(game):
     move_5_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Liverpool')]
     test_create_units(game, move_5_units)
-    
     print('-----MOVE UNITS TEST 5-----')
 
     unit1 = game.players[0].units[0]
@@ -144,7 +139,6 @@ def test_move_units_5(game):
 def test_hold_units(game):
     hold_units = [(0, 'Edinburgh'), (1, 'Liverpool')]
     test_create_units(game, hold_units)
-    
     print('-----HOLD UNITS TEST 1-----')
 
     unit1 = game.players[0].units[0]
@@ -167,7 +161,6 @@ def test_hold_units(game):
 def test_support_1(game):
     support_1_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Liverpool')]
     test_create_units(game, support_1_units)
-
     print('-----SUPPORT UNITS TEST 1-----')
 
     unit1 = game.players[0].units[0]
@@ -194,7 +187,6 @@ def test_support_1(game):
 def test_support_2(game):
     support_2_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Liverpool')]
     test_create_units(game, support_2_units)
-    
     print('-----SUPPORT UNITS TEST 2-----')
 
     unit1 = game.players[0].units[0]
@@ -221,7 +213,6 @@ def test_support_2(game):
 def test_support_3(game):
     support_3_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Liverpool')]
     test_create_units(game, support_3_units)
-    
     print('-----SUPPORT UNITS TEST 3-----')
 
     unit1 = game.players[0].units[0]
@@ -248,7 +239,6 @@ def test_support_3(game):
 def test_support_4(game):
     support_4_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Liverpool')]
     test_create_units(game, support_4_units)
-
     print('-----SUPPORT UNITS TEST 4-----')
 
     unit1 = game.players[0].units[0]
@@ -277,30 +267,15 @@ def test_support_4(game):
 def test_support_5(game):
     support_5_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Liverpool'),\
                        (1, 'Yorkshire'), (1, 'Norwegian Sea'), (1, 'North Sea')]
-
     test_create_units(game, support_5_units)
-    
     print('-----SUPPORT UNITS TEST 5-----')
 
-    # Edin
-    unit1 = game.players[0].units[0]
-    print('unit1:', unit1.region)
-    # Clyde
-    unit2 = game.players[0].units[1]
-    print('unit2:', unit2.region)
-    # Liverpool
-    unit3 = game.players[1].units[0]
-    print('unit3:', unit3.region)
-    # Yorkshire
-    unit4 = game.players[1].units[1]
-    print('unit4:', unit4.region)
-    # Norwegian Sea
-    unit5 = game.players[1].units[2]
-    print('unit5:', unit5.region)
-    # North Sea
-    unit6 = game.players[1].units[3]
-    print('unit6:', unit6.region)
-    
+    unit1 = game.players[0].units[0]  # Edin
+    unit2 = game.players[0].units[1]  # Clyde
+    unit3 = game.players[1].units[0]  # Liverpool
+    unit4 = game.players[1].units[1]  # Yorkshire
+    unit5 = game.players[1].units[2]  # Norwegian Sea
+    unit6 = game.players[1].units[3]  # North Sea
     order1 = Move(0, 'Edinburgh', to='Yorkshire')
     order2 = Support(0, 'Clyde', from_='Edinburgh', to='Yorkshire')
     order3 = Support(1, 'Liverpool', from_='Yorkshire', to='Yorkshire')
@@ -333,29 +308,17 @@ def test_support_5(game):
 def test_support_6(game):
     support_6_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Yorkshire'), \
                    (1, 'Norwegian Sea'), (1, 'North Sea')]
-    
     test_create_units(game, support_6_units)
     print('-----SUPPORT UNITS TEST 6-----')
 
-    # Edin
-    unit1 = game.players[0].units[0]
-    print('unit1:', unit1.region)
-    # Clyde
-    unit2 = game.players[0].units[1]
-    print('unit2:', unit2.region)
-    # Yorkshire
-    unit3 = game.players[1].units[0]
-    print('unit3:', unit3.region)
-    # Norwegian Sea
-    unit4 = game.players[1].units[1]
-    print('unit4:', unit4.region)
-    # Norwegian Sea
-    unit5 = game.players[1].units[2]
-    print('unit5:', unit5.region)
-    
+    unit1 = game.players[0].units[0]  # Edin
+    unit2 = game.players[0].units[1]  # Clyde
+    unit3 = game.players[1].units[0]  # Yorkshire
+    unit4 = game.players[1].units[1]  # Norwegian Sea
+    unit5 = game.players[1].units[2]  # North Sea
     order1 = Hold(0, 'Edinburgh')
     order2 = Support(0, 'Clyde', from_='Edinburgh', to='Edinburgh')
-    order3 = Hold(1, 'Yorkshire')
+    order3 = Move(1, 'Yorkshire', to='Clyde')
     order4 = Move(1, 'Norwegian Sea', to='Edinburgh')
     order5 = Support(1, 'North Sea', from_= 'Norwegian Sea', to='Edinburgh') 
     unit1.orders = order1
@@ -368,11 +331,11 @@ def test_support_6(game):
     game.game_map.print_extended_board()
 
     assert game.game_map.regions['Clyde'].unit == hash(unit2)
-    assert game.game_map.regions['Edinburgh'].unit == hash(unit5)
-    assert game.game_map.regions['Yorkshire'].unit == hash(unit4)
+    assert game.game_map.regions['Edinburgh'].unit == hash(unit4)
+    assert game.game_map.regions['Yorkshire'].unit == hash(unit3)
     assert game.game_map.regions['Liverpool'].unit == None
     assert game.game_map.regions['Norwegian Sea'].unit == None
-    assert game.game_map.regions['North Sea'].unit == hash(unit6)
+    assert game.game_map.regions['North Sea'].unit == hash(unit5)
 
     assert [key for key in game.game_map.dislodged.keys()][0] == hash(unit1)
 
