@@ -222,6 +222,7 @@ class Env:
         else print('    A     |')
         print('-----------------------')
 
+
     def print_extended_board(self):
         print('----------------------------------')
         print('|  Clyde   |   Edin   |  Nwg Sea |')
