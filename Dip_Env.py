@@ -71,6 +71,7 @@ class Env:
         lst = []
         for order in self.moves.values():
             if type(order) == Move:
+                lst.append(order.region) # testing
                 lst.append(order.to)
             if type(order) == Hold or type(order) == Support:
                 lst.append(order.region)
@@ -78,7 +79,6 @@ class Env:
 
 
     def resolve_conflicts(self, conflicts):
-        #print('MOVES:', self.moves)
         print('CONFLICTS:', conflicts)
         conflicting_region = conflicts.pop()
         conflicting_orders = self.get_conflicting_orders(conflicting_region)
@@ -118,8 +118,6 @@ class Env:
 
 
     def cut_support(self):
-        for _, order in self.moves.items():
-            print('order:', order.details())
         for unit, order in self.moves.items():
             if type(order) == Move and self.regions[order.to].unit:
                 affected_unit = self.get_unit_by_region(order.to)
@@ -127,7 +125,6 @@ class Env:
                 if type(self.moves[affected_unit]) == Support:
                     self.moves[affected_unit].from_ = None
                     self.moves[affected_unit].to = None
-                    print('CUTTING ORDER:', self.moves[affected_unit])
         
 
     def get_conflicting_orders(self, conflicting_region):
@@ -141,39 +138,15 @@ class Env:
 
     def calculate_local_strengths(self, conflicting_region, conflicting_orders):
         local_strengths = {}
-        print('CONFLICTING ORDERS:', conflicting_orders)
         for unit, _ in conflicting_orders:
             local_strengths[unit] = 1
         for unit, order in conflicting_orders:
-
-            # case when support order is the conflicting region
-            if type(order) == Support and order.region == conflicting_region:
-                #print('----CASE 1----')
-                pass
-
             # case when order is supporting the conflicting region
             if type(order) == Support and order.to == conflicting_region:
-                #print('----CASE 2----')
                 region = order.from_
                 supported_unit = self.get_unit_by_region(region)
                 local_strengths[supported_unit] += 1
-
         return local_strengths
-        
-
-    def calculate_strengths(self):
-        for unit in self.moves:
-            self.strengths[unit] = 1
-        for unit, order in self.moves.items():
-            if type(order) == Support:
-                region = order.from_
-                supported_unit = self.get_unit_by_region(region)
-                self.strengths[supported_unit] += 1
-            if type(order) == Move and self.regions[order.to].unit:
-                affected_unit = self.get_unit_by_region(order.to)
-                supported_unit = self.get_supported_unit(affected_unit)
-                if type(self.moves[affected_unit]) == Support:
-                    self.strengths[supported_unit] -= 1
 
 
     def get_supported_unit(self, unit):
