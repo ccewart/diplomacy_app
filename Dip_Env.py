@@ -45,10 +45,21 @@ class Env:
     def resolve_orders(self, players):
         self.collect_orders(players)
         self.cut_support()
-        print('---FINDING CONFLICTS---')
+
+##        conflicts = self.find_conflicts()
+##        for order in self.moves.values():
+##            print('order:', order.details(), order.resolved)
+##        print()
+##        self.resolve_uncontested_moves(conflicts)
+##
+##        for order in self.moves.values():
+##            print('order:', order.details(), order.resolved)
+        
         conflicts = self.find_conflicts()
+        print('FIRST CONFLICTS:', conflicts)
         while conflicts:
             conflicts = self.resolve_conflicts(conflicts)
+
         for unit, order in self.moves.items():
             if type(order) == Move:
                 self.results[unit] = order.to
@@ -59,6 +70,13 @@ class Env:
         self.update_regions()
 
 
+    def resolve_uncontested_moves(self, conflicts):
+        for order in self.moves.values():
+            if type(order) == Move and order.to not in conflicts:
+                print('resolving order:', order.details())
+                order.resolved = True
+
+
     def collect_orders(self, players):
         for player in players:
             for unit in player.units:
@@ -67,12 +85,20 @@ class Env:
                 self.units[hash(unit)] = unit
                 self.moves[hash(unit)] = unit.orders
 
+
     def find_conflicts(self):
         lst = []
-        for order in self.moves.values():
-            if type(order) == Move:
-                lst.append(order.region) # testing
+        for unit, order in self.moves.items():
+            if type(order) == Move and order.resolved == False:
                 lst.append(order.to)
+                
+                # case when units are moving into each other
+                targeted_unit = self.get_unit_by_region(order.to)
+                if targeted_unit:
+                    print('targeted unit:', targeted_unit)
+                    if self.moves[targeted_unit].to == order.region \
+                       and unit != targeted_unit:
+                        lst.append(order.to)
             if type(order) == Hold or type(order) == Support:
                 lst.append(order.region)
         return set([i for i in lst if lst.count(i)>1])
@@ -108,12 +134,11 @@ class Env:
             conflicting_orders = [item for item in conflicting_orders if item[0]\
                                   not in [key for key in self.dislodged.keys()]]
 
-        # bounce unsuccessful move orders
+        # unresolved move orders bounce
         for unit, order in conflicting_orders:
             if type(order) == Move and order.resolved == False:
-                self.moves[unit].to = self.moves[unit].region
+                self.moves[unit].to = self.moves[unit].region       
         
-        print()
         return self.find_conflicts()
 
 

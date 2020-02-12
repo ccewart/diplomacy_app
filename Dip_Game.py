@@ -88,6 +88,7 @@ def run_all_tests():
     decorated_test_move_units_3 = test_wrapper(test_move_units_3)
     decorated_test_move_units_4 = test_wrapper(test_move_units_4)
     decorated_test_move_units_5 = test_wrapper(test_move_units_5)
+    decorated_test_move_units_6 = test_wrapper(test_move_units_6)
     decorated_test_support_1 = test_wrapper(test_support_1)
     decorated_test_support_2 = test_wrapper(test_support_2)
     decorated_test_support_3 = test_wrapper(test_support_3)
@@ -102,6 +103,7 @@ def run_all_tests():
     decorated_test_move_units_3()
     decorated_test_move_units_4()
     decorated_test_move_units_5()
+    decorated_test_move_units_6()
     decorated_test_support_1()
     decorated_test_support_2()
     decorated_test_support_3()
@@ -109,14 +111,14 @@ def run_all_tests():
     decorated_test_support_5()
     decorated_test_support_6()
     decorated_test_support_7()
-
+    
 
 if __name__ == '__main__':
     game = Game(2)
     #game.initiate_prints()
     #game.reset_order_sheet()
 
-    #run_all_tests()
+    run_all_tests()
 
     #test_hold_units(game)
     #test_move_units_1(game)
@@ -124,7 +126,7 @@ if __name__ == '__main__':
     #test_move_units_3(game)
     #test_move_units_4(game)
     #test_move_units_5(game)
-    test_move_units_6(game)
+    #test_move_units_6(game)
     #test_support_1(game)
     #test_support_2(game)
     #test_support_3(game)
