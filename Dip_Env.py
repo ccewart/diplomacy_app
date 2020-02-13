@@ -59,7 +59,6 @@ class Env:
         print('FIRST CONFLICTS:', conflicts)
         while conflicts:
             conflicts = self.resolve_conflicts(conflicts)
-
         for unit, order in self.moves.items():
             if type(order) == Move:
                 self.results[unit] = order.to
@@ -146,10 +145,16 @@ class Env:
         for unit, order in self.moves.items():
             if type(order) == Move and self.regions[order.to].unit:
                 affected_unit = self.get_unit_by_region(order.to)
+                
                 supported_unit = self.get_supported_unit(affected_unit)
-                if type(self.moves[affected_unit]) == Support:
-                    self.moves[affected_unit].from_ = None
-                    self.moves[affected_unit].to = None
+                #print('supported_unit:', supported_unit)
+                
+                if type(self.moves[affected_unit]) == Support and supported_unit:
+                    #print('supported unit target:', self.moves[supported_unit].to)
+                    #print('current orders origin:', order.region)
+                    if self.moves[supported_unit].to != order.region:
+                        self.moves[affected_unit].from_ = None
+                        self.moves[affected_unit].to = None
         
 
     def get_conflicting_orders(self, conflicting_region):
@@ -171,6 +176,8 @@ class Env:
                 region = order.from_
                 supported_unit = self.get_unit_by_region(region)
                 local_strengths[supported_unit] += 1
+
+            
         return local_strengths
 
 

@@ -439,10 +439,40 @@ def test_support_9(game):
     unit2 = game.players[0].units[1]  # Clyde
     unit3 = game.players[1].units[0]  # Liverpool
     unit4 = game.players[1].units[1]  # Yorkshire
-    print(hash(unit1))
-    print(hash(unit2))
-    print(hash(unit3))
-    print(hash(unit4))
+    print('unit:', hash(unit1), unit1.region)
+    print('unit:', hash(unit2), unit2.region)
+    print('unit:', hash(unit3), unit3.region)
+    print('unit:', hash(unit4), unit4.region)
+    order1 = Support(0, 'Edinburgh', from_='Clyde', to='Yorkshire')
+    order2 = Move(0, 'Clyde', to='Yorkshire')
+    order3 = Move(1, 'Liverpool', to='Clyde')
+    order4 = Support(1, 'Yorkshire', from_='Liverpool', to='Clyde')
+    unit1.orders = order1
+    unit2.orders = order2
+    unit3.orders = order3
+    unit4.orders = order4
+
+    game.game_map.resolve_orders(game.players)
+    game.board
+
+    assert game.game_map.regions['Clyde'].unit == hash(unit2)
+    assert game.game_map.regions['Edinburgh'].unit == hash(unit1)
+    assert game.game_map.regions['Yorkshire'].unit == hash(unit4)
+    assert game.game_map.regions['Liverpool'].unit == hash(unit3)
+
+    print('-----SUPPORT UNITS TEST 9 PASSED-----')
+
+
+def test_support_10(game):
+    support_10_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Liverpool'), \
+                   (1, 'Yorkshire')]
+    test_create_units(game, support_10_units)
+    print('-----SUPPORT UNITS TEST 10-----')
+    unit1 = game.players[0].units[0]  # Edin
+    unit2 = game.players[0].units[1]  # Clyde
+    unit3 = game.players[1].units[0]  # Liverpool
+    unit4 = game.players[1].units[1]  # Yorkshire
+    
     order1 = Support(0, 'Edinburgh', from_='Clyde', to='Yorkshire')
     order2 = Move(0, 'Clyde', to='Yorkshire')
     order3 = Support(1, 'Liverpool', from_='Yorkshire', to='Clyde')
@@ -460,11 +490,36 @@ def test_support_9(game):
     assert game.game_map.regions['Yorkshire'].unit == hash(unit4)
     assert game.game_map.regions['Liverpool'].unit == hash(unit3)
 
-    print('-----SUPPORT UNITS TEST 9 PASSED-----')
+    print('-----SUPPORT UNITS TEST 10 PASSED-----')
 
 
+def test_support_11(game):
+    support_11_units = [(0, 'Edinburgh'), (0, 'Clyde'), (1, 'Liverpool')]
+    test_create_units(game, support_11_units)
+    print('-----SUPPORT UNITS TEST 11-----')
+    unit1 = game.players[0].units[0]  # Edin
+    unit2 = game.players[0].units[1]  # Clyde
+    unit3 = game.players[1].units[0]  # Liverpool
+    
+    order1 = Support(0, 'Edinburgh', from_='Clyde', to='Liverpool')
+    order2 = Move(0, 'Clyde', to='Liverpool')
+    order3 = Move(1, 'Liverpool', to='Edinburgh')
+    unit1.orders = order1
+    unit2.orders = order2
+    unit3.orders = order3
+
+    game.game_map.resolve_orders(game.players)
+    game.board
+
+    assert game.game_map.regions['Clyde'].unit == None
+    assert game.game_map.regions['Edinburgh'].unit == hash(unit1)
+    assert game.game_map.regions['Yorkshire'].unit == None
+    assert game.game_map.regions['Liverpool'].unit == hash(unit2)
+    
+
+    assert [key for key in game.game_map.dislodged.keys()][0] == hash(unit3)
 
 
-
+    print('-----SUPPORT UNITS TEST 11 PASSED-----')
 
 
