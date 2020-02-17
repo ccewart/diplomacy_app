@@ -455,9 +455,9 @@ def test_support_9(game):
     game.game_map.resolve_orders(game.players)
     game.board
 
-    assert game.game_map.regions['Clyde'].unit == hash(unit2)
+    assert game.game_map.regions['Clyde'].unit == hash(unit3)
     assert game.game_map.regions['Edinburgh'].unit == hash(unit1)
-    assert game.game_map.regions['Yorkshire'].unit == hash(unit4)
+    assert game.game_map.regions['Yorkshire'].unit == hash(unit2)
     assert game.game_map.regions['Liverpool'].unit == hash(unit3)
 
     print('-----SUPPORT UNITS TEST 9 PASSED-----')

@@ -114,8 +114,8 @@ class Env:
                             item[1] == max(local_strengths.values())]
 
         print('LOCAL STRENGTHS:', local_strengths)
-        print('CONFLICTING REGION:', conflicting_region)
-        print('CONFLICTING ORDERS: ', conflicting_orders)
+        #print('CONFLICTING REGION:', conflicting_region)
+        #print('CONFLICTING ORDERS: ', conflicting_orders)
         print('STRONGEST_ORDERS:', strongest_orders)
 
         # unoccupied space, strongest move wont bounce
@@ -143,19 +143,25 @@ class Env:
 
     def cut_support(self):
         for unit, order in self.moves.items():
+            supporting_regions = self.get_supporting_regions(order.region)
+            print('SUPPORTING REGIONS:', supporting_regions)
             if type(order) == Move and self.regions[order.to].unit:
                 affected_unit = self.get_unit_by_region(order.to)
-                
                 supported_unit = self.get_supported_unit(affected_unit)
-                #print('supported_unit:', supported_unit)
-                
                 if type(self.moves[affected_unit]) == Support and supported_unit:
-                    #print('supported unit target:', self.moves[supported_unit].to)
-                    #print('current orders origin:', order.region)
                     if self.moves[supported_unit].to != order.region:
+                        print('  cutting support of unit:', unit)
                         self.moves[affected_unit].from_ = None
                         self.moves[affected_unit].to = None
-        
+
+
+    def get_supporting_regions(self, region):
+        supporting_regions = []
+        for unit, order in self.moves.items():
+            if type(order) == Support and order.from_ == region:
+                supporting_regions.append(order.region)
+        return supporting_regions
+    
 
     def get_conflicting_orders(self, conflicting_region):
         conflicting_orders = []
@@ -167,17 +173,32 @@ class Env:
 
 
     def calculate_local_strengths(self, conflicting_region, conflicting_orders):
+        print('CONFLICTING REGION:', conflicting_region)
+        print('CONFLICTING ORDERS: ', conflicting_orders)
         local_strengths = {}
-        for unit, _ in conflicting_orders:
-            local_strengths[unit] = 1
+        attacks_from = []
         for unit, order in conflicting_orders:
-            # case when order is supporting the conflicting region
-            if type(order) == Support and order.to == conflicting_region:
-                region = order.from_
-                supported_unit = self.get_unit_by_region(region)
-                local_strengths[supported_unit] += 1
+            local_strengths[unit] = 1
+            if type(order) == Move and order.region != conflicting_region:
+                attacks_from.append(order.region)
+        print('ATTACKS FROM:', attacks_from)
+        for unit, order in conflicting_orders:
+            if type(order) == Support:
+                supported_region = order.from_
+                print('SUPPORTED REGION:', supported_region)
 
+                # check if support has been cut
+                if supported_region:
+                    supported_unit = self.get_unit_by_region(supported_region)
+                    # case when order is supporting the conflicting region
+                    if order.to == conflicting_region:
+                        local_strengths[supported_unit] += 1
             
+                    # case when unit in conflicting region is supporting an attack
+                    # against another unit moving in
+                    elif order.region == conflicting_region:
+                        if self.moves[supported_unit].to in attacks_from:
+                            local_strengths[unit] += 1       
         return local_strengths
 
 
