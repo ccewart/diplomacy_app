@@ -341,6 +341,11 @@ def test_support_6(game):
     unit3 = game.players[1].units[0]  # Yorkshire
     unit4 = game.players[1].units[1]  # Norwegian Sea
     unit5 = game.players[1].units[2]  # North Sea
+    print('unit:', hash(unit1), unit1.region)
+    print('unit:', hash(unit2), unit2.region)
+    print('unit:', hash(unit3), unit3.region)
+    print('unit:', hash(unit4), unit4.region)
+    print('unit:', hash(unit5), unit5.region)
     order1 = Hold(0, 'Edinburgh')
     order2 = Support(0, 'Clyde', from_='Edinburgh', to='Edinburgh')
     order3 = Move(1, 'Yorkshire', to='Clyde')
@@ -458,7 +463,9 @@ def test_support_9(game):
     assert game.game_map.regions['Clyde'].unit == hash(unit3)
     assert game.game_map.regions['Edinburgh'].unit == hash(unit1)
     assert game.game_map.regions['Yorkshire'].unit == hash(unit2)
-    assert game.game_map.regions['Liverpool'].unit == hash(unit3)
+    assert game.game_map.regions['Liverpool'].unit == None
+
+    assert [key for key in game.game_map.dislodged.keys()][0] == hash(unit4)
 
     print('-----SUPPORT UNITS TEST 9 PASSED-----')
 
@@ -472,7 +479,10 @@ def test_support_10(game):
     unit2 = game.players[0].units[1]  # Clyde
     unit3 = game.players[1].units[0]  # Liverpool
     unit4 = game.players[1].units[1]  # Yorkshire
-    
+    print('unit:', hash(unit1), unit1.region)
+    print('unit:', hash(unit2), unit2.region)
+    print('unit:', hash(unit3), unit3.region)
+    print('unit:', hash(unit4), unit4.region)
     order1 = Support(0, 'Edinburgh', from_='Clyde', to='Yorkshire')
     order2 = Move(0, 'Clyde', to='Yorkshire')
     order3 = Support(1, 'Liverpool', from_='Yorkshire', to='Clyde')
@@ -500,7 +510,9 @@ def test_support_11(game):
     unit1 = game.players[0].units[0]  # Edin
     unit2 = game.players[0].units[1]  # Clyde
     unit3 = game.players[1].units[0]  # Liverpool
-    
+    print('unit:', hash(unit1), unit1.region)
+    print('unit:', hash(unit2), unit2.region)
+    print('unit:', hash(unit3), unit3.region)
     order1 = Support(0, 'Edinburgh', from_='Clyde', to='Liverpool')
     order2 = Move(0, 'Clyde', to='Liverpool')
     order3 = Move(1, 'Liverpool', to='Edinburgh')
