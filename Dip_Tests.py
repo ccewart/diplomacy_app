@@ -301,6 +301,13 @@ def test_support_5(game):
     unit4 = game.players[1].units[1]  # Yorkshire
     unit5 = game.players[1].units[2]  # Norwegian Sea
     unit6 = game.players[1].units[3]  # North Sea
+    print('unit:', hash(unit1), unit1.region)
+    print('unit:', hash(unit2), unit2.region)
+    print('unit:', hash(unit3), unit3.region)
+    print('unit:', hash(unit4), unit4.region)
+    print('unit:', hash(unit5), unit5.region)
+    print('unit:', hash(unit6), unit6.region)
+
     order1 = Move(0, 'Edinburgh', to='Yorkshire')
     order2 = Support(0, 'Clyde', from_='Edinburgh', to='Yorkshire')
     order3 = Support(1, 'Liverpool', from_='Yorkshire', to='Yorkshire')

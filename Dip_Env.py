@@ -90,7 +90,7 @@ class Env:
     def resolve_conflicts(self, conflicts):
         print('CONFLICTS:', conflicts)
         conflicting_region = conflicts.pop()
-        conflicting_orders = self.get_conflicting_orders(conflicting_region)
+        conflicting_orders = self.get_conflicting_orders_with_from(conflicting_region)
 
         local_strengths = self.calculate_local_strengths(conflicting_region,\
                                                          conflicting_orders)
@@ -128,16 +128,16 @@ class Env:
     def cut_support(self):
         for unit, order in self.moves.items():
             supporting_regions = self.get_supporting_regions(order.region)
-            print('FOR ORDER STARTING FROM:', order.region)
-            print('  SUPPORTING REGIONS:', supporting_regions)
+            #print('FOR ORDER STARTING FROM:', order.region)
+            #print('  SUPPORTING REGIONS:', supporting_regions)
             if type(order) == Move and self.regions[order.to].unit:
                 affected_unit = self.get_unit_by_region(order.to)
                 supported_unit = self.get_supported_unit(affected_unit)
-                print('    affected_unit:', affected_unit)
-                print('    supported_unit:', supported_unit)
+                #print('    affected_unit:', affected_unit)
+                #print('    supported_unit:', supported_unit)
                 if type(self.moves[affected_unit]) == Support and supported_unit:
                     if self.moves[supported_unit].to != order.region:
-                        print('    cutting support of unit:', unit)
+                        #print('    cutting support of unit:', unit)
                         self.moves[affected_unit].from_ = None
                         self.moves[affected_unit].to = None
 
@@ -159,16 +159,34 @@ class Env:
         return conflicting_orders
 
 
+    def get_conflicting_orders_with_from(self, conflicting_region):
+        conflicting_orders = []
+        for unit, order in self.moves.items():
+            if order.to == conflicting_region or \
+            order.region == conflicting_region:
+                conflicting_orders.append((unit, order))
+            elif type(order) == Support and order.from_ == conflicting_region:
+                conflicting_orders.append((unit, order))
+        return conflicting_orders
+
+
     def calculate_local_strengths(self, conflicting_region, conflicting_orders):
         print('CONFLICTING REGION:', conflicting_region)
         print('  CONFLICTING ORDERS: ', conflicting_orders)
         local_strengths = {}
-        attacks_from = []
+        
+        # give all units base strength 1
         for unit, order in conflicting_orders:
             local_strengths[unit] = 1
+
+        # which regions are moving into conflicting region
+        attacks_from = []
+        for unit, order in conflicting_orders:
             if type(order) == Move and order.region != conflicting_region:
                 attacks_from.append(order.region)
         print('  ATTACKS FROM:', attacks_from)
+
+        # add strength to supported units
         for unit, order in conflicting_orders:
             if type(order) == Support:
                 supported_region = order.from_
@@ -177,11 +195,19 @@ class Env:
                 # check if support has been cut
                 if supported_region:
                     supported_unit = self.get_unit_by_region(supported_region)
-                    print('  SUPPORTED UNIT:', supported_unit)
-                    # case when order is supporting the conflicting region
-                    if order.to == conflicting_region:
-                        print('    CASE 1')
-                        local_strengths[supported_unit] += 1                 
+                    print('    SUPPORTED UNIT: ', supported_unit)
+                    if supported_unit in local_strengths.keys():
+                        # case when order is supporting the conflicting region
+                        if order.to == conflicting_region:
+                            print('      += 1 strength -- case 1')
+                            local_strengths[supported_unit] += 1
+
+                        # units attacking each other
+                        elif order.to in attacks_from:
+                            print('      += 1 strength -- case 2')
+                            local_strengths[supported_unit] += 1
+
+                    
         return local_strengths
 
 
