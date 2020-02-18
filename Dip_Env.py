@@ -90,7 +90,7 @@ class Env:
     def resolve_conflicts(self, conflicts):
         print('CONFLICTS:', conflicts)
         conflicting_region = conflicts.pop()
-        conflicting_orders = self.get_conflicting_orders_with_from(conflicting_region)
+        conflicting_orders = self.get_conflicting_orders(conflicting_region)
 
         local_strengths = self.calculate_local_strengths(conflicting_region,\
                                                          conflicting_orders)
@@ -120,7 +120,14 @@ class Env:
         # unresolved move orders bounce
         for unit, order in conflicting_orders:
             if type(order) == Move and order.resolved == False:
-                self.moves[unit].to = self.moves[unit].region       
+                print('    BOUNCING:', unit)
+        
+                # case when moving into another move
+                self.moves[unit].to = self.moves[unit].region
+
+                # case when moving into a hold order
+                #supporting_orders = get_supporting_regions(order.region)
+                
         
         return self.find_conflicts()
 
@@ -156,15 +163,6 @@ class Env:
             if order.to == conflicting_region or \
             order.region == conflicting_region:
                 conflicting_orders.append((unit, order))
-        return conflicting_orders
-
-
-    def get_conflicting_orders_with_from(self, conflicting_region):
-        conflicting_orders = []
-        for unit, order in self.moves.items():
-            if order.to == conflicting_region or \
-            order.region == conflicting_region:
-                conflicting_orders.append((unit, order))
             elif type(order) == Support and order.from_ == conflicting_region:
                 conflicting_orders.append((unit, order))
         return conflicting_orders
@@ -185,7 +183,7 @@ class Env:
             if type(order) == Move and order.region != conflicting_region:
                 attacks_from.append(order.region)
         print('  ATTACKS FROM:', attacks_from)
-
+        
         # add strength to supported units
         for unit, order in conflicting_orders:
             if type(order) == Support:
