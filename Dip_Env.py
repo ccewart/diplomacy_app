@@ -206,8 +206,6 @@ class Env:
                         elif order.to in attacks_from:
                             print('      += 1 strength -- case 2')
                             local_strengths[supported_unit] += 1
-
-                    
         return local_strengths
 
 
