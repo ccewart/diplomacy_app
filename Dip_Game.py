@@ -4,6 +4,8 @@ from Dip_Orders import Order, Create_Unit, Hold, Move, Support
 from Dip_Tests import *
 import io
 import sys
+import tkinter as tk
+
 
 class Game:
     def __init__(self, nb_players):
@@ -89,6 +91,7 @@ def run_all_tests():
     decorated_test_move_units_4 = test_wrapper(test_move_units_4)
     decorated_test_move_units_5 = test_wrapper(test_move_units_5)
     decorated_test_move_units_6 = test_wrapper(test_move_units_6)
+    decorated_test_move_units_7 = test_wrapper(test_move_units_7)
     decorated_test_support_1 = test_wrapper(test_support_1)
     decorated_test_support_2 = test_wrapper(test_support_2)
     decorated_test_support_3 = test_wrapper(test_support_3)
@@ -100,6 +103,8 @@ def run_all_tests():
     decorated_test_support_9 = test_wrapper(test_support_9)
     decorated_test_support_10 = test_wrapper(test_support_10)
     decorated_test_support_11 = test_wrapper(test_support_11)
+    decorated_test_support_12 = test_wrapper(test_support_12)
+    decorated_test_support_13 = test_wrapper(test_support_13)
 
     decorated_test_hold_units()
     decorated_test_move_units_1()
@@ -108,6 +113,7 @@ def run_all_tests():
     decorated_test_move_units_4()
     decorated_test_move_units_5()
     decorated_test_move_units_6()
+    decorated_test_move_units_7()
     decorated_test_support_1()
     decorated_test_support_2()
     decorated_test_support_3()
@@ -119,6 +125,8 @@ def run_all_tests():
     decorated_test_support_9()
     decorated_test_support_10()
     decorated_test_support_11()
+    decorated_test_support_12()
+    decorated_test_support_13()
     
 
 if __name__ == '__main__':
@@ -135,6 +143,7 @@ if __name__ == '__main__':
     #test_move_units_4(game)
     #test_move_units_5(game)
     #test_move_units_6(game)
+    #test_move_units_7(game)
     #test_support_1(game)
     #test_support_2(game)
     #test_support_3(game)
@@ -146,5 +155,6 @@ if __name__ == '__main__':
     #test_support_9(game)
     #test_support_10(game)
     #test_support_11(game)
-
+    #test_support_12(game)
+    #test_support_13(game)
     

@@ -614,3 +614,48 @@ def test_support_12(game):
     print('-----SUPPORT UNITS TEST 12 PASSED-----')
 
 
+def test_support_13(game):
+    support_13_units = [(0, 'Clyde'), (0, 'Yorkshire'), (0, 'Norwegian Sea'),\
+                        (0, 'North Sea'), (1, 'Edinburgh'), (1, 'Liverpool')]
+    test_create_units(game, support_13_units)
+    print('-----SUPPORT UNITS TEST 13-----')
+    unit1 = game.players[0].units[0]  # Clyde
+    unit2 = game.players[0].units[1]  # Yorkshire
+    unit3 = game.players[1].units[0]  # Edinburgh
+    unit4 = game.players[1].units[1]  # Liverpool
+    unit5 = game.players[0].units[2]  # Norwegian Sea
+    unit6 = game.players[0].units[3]  # North Sea
+    
+    print('unit:', hash(unit1), unit1.region)
+    print('unit:', hash(unit2), unit2.region)
+    print('unit:', hash(unit3), unit3.region)
+    print('unit:', hash(unit4), unit4.region)
+    print('unit:', hash(unit5), unit5.region)
+    print('unit:', hash(unit6), unit6.region)
+    
+    order1 = Move(0, 'Clyde', to='Edinburgh')
+    order2 = Support(0, 'Yorkshire', from_='Clyde', to='Edinburgh')
+    order3 = Move(1, 'Edinburgh', to='Clyde')
+    order4 = Support(1, 'Liverpool', from_='Edinburgh', to='Clyde')
+    order5 = Move(0, 'Norwegian Sea', to='Edinburgh')
+    order6 = Support(0, 'North Sea', from_='Norwegian Sea', to='Edinburgh')
+    unit1.orders = order1
+    unit2.orders = order2
+    unit3.orders = order3
+    unit4.orders = order4
+    unit5.orders = order5
+    unit6.orders = order6
+
+    game.game_map.resolve_orders(game.players)
+    game.game_map.print_extended_board()
+
+    assert game.game_map.regions['Clyde'].unit == hash(unit1)
+    assert game.game_map.regions['Edinburgh'].unit == hash(unit3)
+    assert game.game_map.regions['Yorkshire'].unit == hash(unit2)
+    assert game.game_map.regions['Liverpool'].unit == hash(unit4)
+    assert game.game_map.regions['Norwegian Sea'].unit == hash(unit5)
+    assert game.game_map.regions['North Sea'].unit == hash(unit6)
+
+    print('-----SUPPORT UNITS TEST 13 PASSED-----')
+
+
