@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from Dip_Orders import Create_Unit, Hold, Move, Support
+from Orders import Create_Unit, Hold, Move, Support
 from Env_Classes import Region, Army, Fleet
 
 
