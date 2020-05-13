@@ -1,6 +1,6 @@
-from collections import OrderedDict, namedtuple
-from Dip_Orders import Order, Create_Unit, Hold, Move, Support
-from Dip_Env_Classes import Region, Army, Fleet
+from collections import OrderedDict
+from Dip_Orders import Create_Unit, Hold, Move, Support
+from Env_Classes import Region, Army, Fleet
 
 
 class Env:
@@ -37,24 +37,31 @@ class Env:
 
     def resolve_builds(self, order_sheet):
         """
-        Create units from orders
+        Create units from orders in order sheet
+        :param order_sheet:
+        :return:
         """
         for order in order_sheet:
             if type(order) == Create_Unit:
                 self.create_unit(order)
 
     def collect_orders(self, players):
+        """
+
+        :param players:
+        :return:
+        """
         for player in players:
             for unit in player.units:
-                if unit.orders == None:
+                if unit.orders is None:
                     unit.orders = Hold(player, unit.region)
                 self.units[hash(unit)] = unit
                 self.moves[hash(unit)] = unit.orders
 
     def resolve_orders(self, players):
-        '''
+        """
 
-        '''
+        """
         self.collect_orders(players)
         self.cut_support()
 
@@ -66,8 +73,8 @@ class Env:
                 self.results[unit] = order.to
             if type(order) == Hold or type(order) == Support:
                 self.results[unit] = order.region
-        print('RESULTS:', self.results)
-        print('DISLODGED:', self.dislodged)
+        print("RESULTS:", self.results)
+        print("DISLODGED:", self.dislodged)
         self.update_regions()
 
     def find_conflicts(self):
@@ -87,16 +94,15 @@ class Env:
         return set([i for i in lst if lst.count(i) > 1])
 
     def resolve_conflicts(self, conflicts):
-        print('CONFLICTS:', conflicts)
+        print("CONFLICTS:", conflicts)
         conflicting_region = conflicts.pop()
         conflicting_orders = self.get_conflicting_orders(conflicting_region)
-        local_strengths = self.calculate_local_strengths(conflicting_region, \
-                                                         conflicting_orders)
+        local_strengths = self.calculate_local_strengths(conflicting_region, conflicting_orders)
         strongest_orders = [item for item in local_strengths.items() if \
                             item[1] == max(local_strengths.values())]
 
-        print('  LOCAL STRENGTHS:', local_strengths)
-        print('  STRONGEST_ORDERS:', strongest_orders)
+        print("  LOCAL STRENGTHS:", local_strengths)
+        print("  STRONGEST_ORDERS:", strongest_orders)
 
         # unoccupied space, move successful
         if len(strongest_orders) == 1:
@@ -104,8 +110,7 @@ class Env:
             self.moves[strongest_unit].resolved = True
 
         # unit dislodged, remove their orders from conflicting_orders
-        conflicting_orders = self.resolve_dislodges(conflicting_region, \
-                                                    conflicting_orders, strongest_orders)
+        conflicting_orders = self.resolve_dislodges(conflicting_region, conflicting_orders, strongest_orders)
 
         # bounce unresolved move orders
         self.resolve_unsuccessful_moves(conflicting_orders)
@@ -138,7 +143,6 @@ class Env:
 
     def cut_support(self):
         for unit, order in self.moves.items():
-            supporting_regions = self.get_supporting_regions(order.region)
             if type(order) == Move and self.regions[order.to].unit:
                 affected_unit = self.get_unit_by_region(order.to)
                 supported_unit = self.get_supported_unit(affected_unit)
@@ -158,8 +162,8 @@ class Env:
         return conflicting_orders
 
     def calculate_local_strengths(self, conflicting_region, conflicting_orders):
-        print('CONFLICTING REGION:', conflicting_region)
-        print('  CONFLICTING ORDERS: ', conflicting_orders)
+        print("CONFLICTING REGION:", conflicting_region)
+        print("  CONFLICTING ORDERS: ", conflicting_orders)
 
         local_strengths = {unit: 1 for unit, _ in conflicting_orders}
 
