@@ -1,7 +1,4 @@
-from Dip_Player import Player
-from Dip_Env import Env
-from Dip_Orders import Order, Create_Unit, Hold, Move, Support
-
+from Dip_Orders import Create_Unit, Hold, Move, Support
 
 def test_create_units(game, build_orders):
     for player, region in build_orders:

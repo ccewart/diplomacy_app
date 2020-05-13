@@ -1,10 +1,9 @@
-from Dip_Player import Player
-from Dip_Env import Env
-from Dip_Orders import Order, Create_Unit, Hold, Move, Support
-from Dip_Tests import *
 import io
 import sys
-import tkinter as tk
+
+from Dip_Env import Env
+from Dip_Player import Player
+from Dip_Tests import *
 
 
 class Game:
@@ -51,6 +50,9 @@ class Game:
 
 
     def collect_build_orders(self):
+        """
+
+        """
         for player in self.players:
             for order in player.orders:
                 self.order_sheet.append(order)
