@@ -8,7 +8,7 @@ class Order:
         self.to = to
 
 
-class Create_Unit(Order):
+class CreateUnit(Order):
     def details(self):
         return f'Player {self.player} creates unit at {self.region}'
 

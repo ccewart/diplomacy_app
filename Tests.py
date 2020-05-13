@@ -1,9 +1,9 @@
-from Orders import Create_Unit, Hold, Move, Support
+from Orders import CreateUnit, Hold, Move, Support
 
 
 def test_create_units(game, build_orders):
     for player, region in build_orders:
-        order = Create_Unit(player, region)
+        order = CreateUnit(player, region)
         game.players[player].orders.append(order)
 
     game.collect_build_orders()
