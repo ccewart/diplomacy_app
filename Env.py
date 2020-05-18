@@ -123,7 +123,8 @@ class Env:
 
     def resolve_dislodges(self, conflicting_region, conflicting_orders, strongest_orders):
         """
-        Update conflicting orders if a unit is dislodged
+        Update conflicting orders if a unit is dislodged. Add dislodged units to dislodged
+        dictionary
         :param conflicting_region:
         :param conflicting_orders:
         :param strongest_orders:
@@ -141,7 +142,7 @@ class Env:
 
     def resolve_unsuccessful_moves(self, conflicting_orders):
         """
-
+        If a move order never gets resolved, change its 'to' location to itself
         :param conflicting_orders:
         """
         for unit, order in conflicting_orders:
@@ -155,6 +156,9 @@ class Env:
                         supporting_order.to = self.orders[unit].to
 
     def cut_support(self):
+        """
+        Remove support from units which are target of a move order
+        """
         for unit, order in self.orders.items():
             if type(order) == Move and self.regions[order.to].unit:
                 affected_unit = self.get_unit_by_region(order.to)
@@ -165,16 +169,27 @@ class Env:
                         self.orders[affected_unit].to = None
 
     def get_conflicting_orders(self, conflicting_region):
+        """
+        Collect orders which are either moving to or supporting a unit moving to the
+         given region
+        :param conflicting_region:
+        :return conflicting_orders:
+        """
         conflicting_orders = []
         for unit, order in self.orders.items():
-            if order.to == conflicting_region or \
-                    order.region == conflicting_region:
+            if order.to == conflicting_region or order.region == conflicting_region:
                 conflicting_orders.append((unit, order))
             elif type(order) == Support and order.from_ == conflicting_region:
                 conflicting_orders.append((unit, order))
         return conflicting_orders
 
     def calculate_local_strengths(self, conflicting_region, conflicting_orders):
+        """
+
+        :param conflicting_region:
+        :param conflicting_orders:
+        :return:
+        """
         print("CONFLICTING REGION:", conflicting_region)
         print("  CONFLICTING ORDERS: ", conflicting_orders)
 
@@ -186,8 +201,7 @@ class Env:
             if type(order) == Move and order.region != conflicting_region:
                 attacks_from.append(order.region)
 
-        return self.add_strength_from_supports(local_strengths, attacks_from, \
-                                               conflicting_region, conflicting_orders)
+        return self.add_strength_from_supports(local_strengths, attacks_from, conflicting_region, conflicting_orders)
 
     def add_strength_from_supports(self, local_strengths, attacks_from, \
                                    conflicting_region, conflicting_orders):
@@ -288,3 +302,4 @@ class Env:
         print('          |') if not self.regions['North Sea'].unit \
             else print('     A    |')
         print('----------------------------------')
+
