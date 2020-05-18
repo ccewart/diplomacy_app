@@ -185,7 +185,7 @@ class Env:
 
     def calculate_local_strengths(self, conflicting_region, conflicting_orders):
         """
-
+        Find out who wins the conflict for a region
         :param conflicting_region:
         :param conflicting_orders:
         :return:
@@ -203,12 +203,18 @@ class Env:
 
         return self.add_strength_from_supports(local_strengths, attacks_from, conflicting_region, conflicting_orders)
 
-    def add_strength_from_supports(self, local_strengths, attacks_from, \
-                                   conflicting_region, conflicting_orders):
+    def add_strength_from_supports(self, local_strengths, attacks_from, conflicting_region, conflicting_orders):
+        """
+        Modify local strengths to include extra support strength
+        :param local_strengths:
+        :param attacks_from:
+        :param conflicting_region:
+        :param conflicting_orders:
+        :return local_strengths:
+        """
         for unit, order in conflicting_orders:
             if type(order) == Support:
                 supported_region = order.from_
-
                 # check if support has been cut
                 if supported_region:
                     supported_unit = self.get_unit_by_region(supported_region)
@@ -216,13 +222,17 @@ class Env:
                         # case when order is supporting the conflicting region
                         if order.to == conflicting_region:
                             local_strengths[supported_unit] += 1
-
                         # case when units attacking each other
                         elif order.to in attacks_from:
                             local_strengths[supported_unit] += 1
         return local_strengths
 
     def get_supporting_regions(self, region):
+        """
+        Helper function. Gets all regions with units which are supporting input region
+        :param region:
+        :return supporting_regions:
+        """
         supporting_regions = []
         for unit, order in self.orders.items():
             if type(order) == Support and order.from_ == region:
@@ -230,6 +240,11 @@ class Env:
         return supporting_regions
 
     def get_supporting_orders(self, region):
+        """
+        Helper function. Gets all orders which are supporting input region
+        :param region:
+        :return supporting_orders:
+        """
         supporting_orders = []
         for unit, order in self.orders.items():
             if type(order) == Support and order.from_ == region:
@@ -237,24 +252,35 @@ class Env:
         return supporting_orders
 
     def get_supported_unit(self, unit):
+        """
+        Helper function. Gets unit which is being supported by input unit
+        :param unit:
+        :return supported_unit:
+        """
         from_ = self.orders[unit].from_
         to = self.orders[unit].to
-        for unit, order in self.orders.items():
+        for supported_unit, order in self.orders.items():
             if order.region == from_ and order.to == to or \
                     order.region == from_ and type(order) == Hold:
-                return unit
+                return supported_unit
 
     def update_regions(self):
+        """ Updates regions with results from last turn """
         self.clear_all_regions()
         for unit, region in self.results.items():
             self.regions[region].unit = unit
 
     def clear_all_regions(self):
+        """ Sets all regions to have no units """
         for region in self.regions.values():
             region.unit = None
 
     def create_unit(self, order):
-        # bring back these checks near end
+        """
+        Make a new army object and place in games region dictionary
+        :param order:
+        """
+        # bring back these checks near end:
         # if self.regions[order.region].supply == True and \
         # self.regions[order.region].unit == None and \
         # self.regions[order.region].owner == order.player:
@@ -266,8 +292,7 @@ class Env:
         self.results = {}
 
     def get_unit_by_region(self, region):
-        return hash(self.regions[region].unit) if \
-            self.regions[region].unit else None
+        return hash(self.regions[region].unit) if self.regions[region].unit else None
 
     def print_board(self):
         print('-----------------------')
