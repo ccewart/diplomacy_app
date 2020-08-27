@@ -281,12 +281,13 @@ class Env:
         :param order:
         """
         # bring back these checks near end:
+        if self.regions[order.region].unit == None:
         # if self.regions[order.region].supply == True and \
         # self.regions[order.region].unit == None and \
         # self.regions[order.region].owner == order.player:
-        new_army = Army(order.player, order.region)
-        self.regions[order.region].unit = new_army
-        self.results[hash(new_army)] = (new_army, order.region, order.player)
+            new_army = Army(order.player, order.region)
+            self.regions[order.region].unit = new_army
+            self.results[hash(new_army)] = (new_army, order.region, order.player)
 
     def reset_results(self):
         self.results = {}
