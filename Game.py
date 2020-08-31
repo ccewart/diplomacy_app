@@ -20,6 +20,8 @@ class Game:
 
     def reset_order_sheet(self):
         self.order_sheet = []
+        for player in self.players:
+            player.orders = []
 
     def initiate_prints(self):
         print("INITIATING GAME")
