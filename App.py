@@ -15,8 +15,6 @@ class App(tk.Frame):
         self.game.next_phase()
         self.game.next_phase()
 
-        self.current_order = None
-
         self.print_phase_btn = tk.Button(self.parent, text="Print phase", command=self.print_phase, image=pixel,
                                          height=20, width=100, compound="c").grid(row=0, column=0)
         self.next_phase_btn = tk.Button(self.parent, text="Next phase", command=self.change_phase, image=pixel,
@@ -29,19 +27,20 @@ class App(tk.Frame):
                                          height=20, width=100, compound="c").grid(row=1, column=2)
         self.print_results_btn = tk.Button(self.parent, text="Print results", command=self.print_results, image=pixel,
                                            height=20, width=100, compound="c").grid(row=2, column=0)
-        self.reset_results_btn = tk.Button(self.parent, text="Reset results", command=self.reset_results, image=pixel,
+        self.print_move_orders = tk.Button(self.parent, text="Print move orders", command=self.print_move_orders, image=pixel,
                                            height=20, width=100, compound="c").grid(row=2, column=1)
-
+        self.reset_results_btn = tk.Button(self.parent, text="Reset results", command=self.reset_results, image=pixel,
+                                           height=20, width=100, compound="c").grid(row=2, column=2)
 
         self.phase_lbl = tk.Label(self.parent, text=self.game.get_phase, image=pixel, height=20, width=100, compound="c")
         self.phase_lbl.grid(row=0, column=1)
 
-        self.btn1 = RegionButton(root, self.game, self.current_order, "Clyde").grid(row=3, column=0)
-        self.btn2 = RegionButton(root, self.game, self.current_order, "Edinburgh").grid(row=3, column=1)
-        self.btn3 = RegionButton(root, self.game, self.current_order, "Norwegian Sea").grid(row=3, column=2)
-        self.btn4 = RegionButton(root, self.game, self.current_order, "Yorkshire").grid(row=4, column=0)
-        self.btn5 = RegionButton(root, self.game, self.current_order, "Liverpool").grid(row=4, column=1)
-        self.btn6 = RegionButton(root, self.game, self.current_order, "North Sea").grid(row=4, column=2)
+        self.btn1 = RegionButton(root, self.game, "Clyde").grid(row=3, column=0)
+        self.btn2 = RegionButton(root, self.game, "Edinburgh").grid(row=3, column=1)
+        self.btn3 = RegionButton(root, self.game, "Norwegian Sea").grid(row=3, column=2)
+        self.btn4 = RegionButton(root, self.game, "Yorkshire").grid(row=4, column=0)
+        self.btn5 = RegionButton(root, self.game, "Liverpool").grid(row=4, column=1)
+        self.btn6 = RegionButton(root, self.game, "North Sea").grid(row=4, column=2)
 
     def change_phase(self):
         if self.game.get_phase == "build":
@@ -51,7 +50,9 @@ class App(tk.Frame):
             self.game.game_map.reset_results()
             self.game.reset_order_sheet()
         if self.game.get_phase == "orders":
-            pass
+            self.game.game_map.resolve_orders(game.players)
+            #self.game.game_map.print_extended_board()
+            self.game.reset_order_sheet()
         self.game.next_phase()
         self.phase_lbl.configure(text=self.game.get_phase)
 
@@ -76,17 +77,21 @@ class App(tk.Frame):
     def print_results(self):
         print(self.game.game_map.results)
 
+    def print_move_orders(self):
+        for player in self.game.players:
+            for unit in player.units:
+                print(unit.orders)
+
     def reset_results(self):
         self.game.game_map.reset_results()
 
+
 class RegionButton(tk.Frame):
-    def __init__(self, parent, game, current_order, name, *args, **kwargs):
+    def __init__(self, parent, game, name, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.game = game
         self.name = name
         self.army = False
-
-        self.current_order = current_order
 
         self.btn = tk.Button(self, command=self.click_button, image=pixel, height=100, width=100, compound="c")
         self.btn.grid(row=1, column=0)
@@ -104,15 +109,19 @@ class RegionButton(tk.Frame):
             self.army = False
 
     def move_unit(self, name):
-        print("current order:", self.current_order)
-        if self.current_order is None:
-            print("moving from:", self.name)
-            self.current_order = Move(0, self.name)
-        elif self.current_order.to is None:
-            print("to:", self.name)
-            self.current_order.to = self.name
-            self.game.players[0].orders.append(self.current_order)
-            self.current_order = None
+        global current_order
+        if current_order is None:
+            current_order = Move(0, self.name)
+        elif current_order.to is None:
+            current_order.to = self.name
+            self.give_order_to_unit(current_order)
+            current_order = None
+
+    def give_order_to_unit(self, order):
+        for player in self.game.players:
+            for unit in player.units:
+                if unit.region == order.region:
+                    unit.orders = order
 
     def click_button(self):
         if self.game.get_phase == "build":
@@ -125,6 +134,7 @@ if __name__ == "__main__":
     root = tk.Tk()
     pixel = tk.PhotoImage(width=1, height=1)
     army_img = tk.PhotoImage(file=r"army.png")
+    current_order = None
     game = Game(2)
     App(root, game).grid()
     root.mainloop()
