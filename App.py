@@ -15,8 +15,8 @@ class App(tk.Frame):
         self.game.next_phase()
         self.game.next_phase()
 
-        self.print_phase_btn = tk.Button(self.parent, text="Print phase", command=self.print_phase, image=pixel,
-                                         height=20, width=100, compound="c").grid(row=0, column=0)
+        self.print_move_orders = tk.Button(self.parent, text="Print move orders", command=self.print_move_orders, image=pixel,
+                                           height=20, width=100, compound="c").grid(row=0, column=0)
         self.next_phase_btn = tk.Button(self.parent, text="Next phase", command=self.change_phase, image=pixel,
                                         height=20, width=100, compound="c").grid(row=0, column=2)
         self.print_orders_btn = tk.Button(self.parent, text="Print orders", command=self.print_orders, image=pixel,
@@ -25,12 +25,6 @@ class App(tk.Frame):
                                          height=20, width=100, compound="c").grid(row=1, column=1)
         self.print_units_btn = tk.Button(self.parent, text="Print units", command=self.print_units, image=pixel,
                                          height=20, width=100, compound="c").grid(row=1, column=2)
-        self.print_results_btn = tk.Button(self.parent, text="Print results", command=self.print_results, image=pixel,
-                                           height=20, width=100, compound="c").grid(row=2, column=0)
-        self.print_move_orders = tk.Button(self.parent, text="Print move orders", command=self.print_move_orders, image=pixel,
-                                           height=20, width=100, compound="c").grid(row=2, column=1)
-        self.reset_results_btn = tk.Button(self.parent, text="Reset results", command=self.reset_results, image=pixel,
-                                           height=20, width=100, compound="c").grid(row=2, column=2)
 
         self.phase_lbl = tk.Label(self.parent, text=self.game.get_phase, image=pixel, height=20, width=100, compound="c")
         self.phase_lbl.grid(row=0, column=1)
@@ -48,6 +42,8 @@ class App(tk.Frame):
         self.btn6 = RegionButton(root, self.game, "North Sea")
         self.btn6.grid(row=4, column=2)
         self.buttons = [self.btn1, self.btn2, self.btn3, self.btn4, self.btn5, self.btn6]
+
+
 
     def change_phase(self):
         if self.game.get_phase == "build":
@@ -85,16 +81,10 @@ class App(tk.Frame):
         for player in self.game.players:
             print(player.units)
 
-    def print_results(self):
-        print(self.game.game_map.results)
-
     def print_move_orders(self):
         for player in self.game.players:
             for unit in player.units:
                 print(unit.orders)
-
-    def reset_results(self):
-        self.game.game_map.reset_results()
 
 
 class RegionButton(tk.Frame):
