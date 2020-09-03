@@ -15,6 +15,10 @@ class App(tk.Frame):
         self.game.next_phase()
         self.game.next_phase()
 
+        canvas = tk.Canvas(self, width=400, height=350)
+
+        #canvas.create_oval(10, 10, 80, 80, outline="#f11", fill="#1f1", width=2)
+
         self.print_move_orders = tk.Button(self.parent, text="Print move orders", command=self.print_move_orders, image=pixel,
                                            height=20, width=100, compound="c").grid(row=0, column=0)
         self.next_phase_btn = tk.Button(self.parent, text="Next phase", command=self.change_phase, image=pixel,
@@ -30,20 +34,21 @@ class App(tk.Frame):
         self.phase_lbl.grid(row=0, column=1)
 
         self.btn1 = RegionButton(root, self.game, "Clyde")
-        self.btn1.grid(row=3, column=0)
         self.btn2 = RegionButton(root, self.game, "Edinburgh")
-        self.btn2.grid(row=3, column=1)
         self.btn3 = RegionButton(root, self.game, "Norwegian Sea")
-        self.btn3.grid(row=3, column=2)
         self.btn4 = RegionButton(root, self.game, "Yorkshire")
-        self.btn4.grid(row=4, column=0)
         self.btn5 = RegionButton(root, self.game, "Liverpool")
-        self.btn5.grid(row=4, column=1)
         self.btn6 = RegionButton(root, self.game, "North Sea")
-        self.btn6.grid(row=4, column=2)
         self.buttons = [self.btn1, self.btn2, self.btn3, self.btn4, self.btn5, self.btn6]
 
-
+        #canvas.create_line(100, 100, 200, 25)
+        canvas.create_window(100, 100, window=self.btn1)
+        canvas.create_window(250, 100, window=self.btn2)
+        canvas.create_window(400, 100, window=self.btn3)
+        canvas.create_window(100, 250, window=self.btn4)
+        canvas.create_window(250, 250, window=self.btn5)
+        canvas.create_window(400, 250, window=self.btn6)
+        canvas.pack()
 
     def change_phase(self):
         if self.game.get_phase == "build":
@@ -124,7 +129,11 @@ class RegionButton(tk.Frame):
             print("moving to:", self.name)
             current_order.to = self.name
             self.give_order_to_unit(current_order)
+            self.draw_move_line()
             current_order = None
+
+    def draw_move_line(self):
+        canvas.create_line(100, 100, 200, 25)
 
     def give_order_to_unit(self, order):
         for player in self.game.players:
