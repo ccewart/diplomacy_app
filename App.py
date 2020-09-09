@@ -8,6 +8,12 @@ class App(tk.Frame):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
         parent.title("Diplomacy")
+        self.coords = {"Clyde": (100, 100),
+                       "Edinburgh": (250, 100),
+                       "Norwegian Sea": (400, 100),
+                       "Yorkshire": (100, 250),
+                       "Liverpool": (250, 250),
+                       "North Sea": (400, 250)}
 
         self.game = game
         self.game.next_phase()
@@ -15,7 +21,7 @@ class App(tk.Frame):
         self.game.next_phase()
         self.game.next_phase()
 
-        canvas = tk.Canvas(self, width=400, height=350)
+        self.canvas = tk.Canvas(self, width=400, height=350)
 
         #canvas.create_oval(10, 10, 80, 80, outline="#f11", fill="#1f1", width=2)
 
@@ -33,22 +39,33 @@ class App(tk.Frame):
         self.phase_lbl = tk.Label(self.parent, text=self.game.get_phase, image=pixel, height=20, width=100, compound="c")
         self.phase_lbl.grid(row=0, column=1)
 
-        self.btn1 = RegionButton(root, self.game, "Clyde")
-        self.btn2 = RegionButton(root, self.game, "Edinburgh")
-        self.btn3 = RegionButton(root, self.game, "Norwegian Sea")
-        self.btn4 = RegionButton(root, self.game, "Yorkshire")
-        self.btn5 = RegionButton(root, self.game, "Liverpool")
-        self.btn6 = RegionButton(root, self.game, "North Sea")
+        self.btn1 = RegionButton(root, self.game, "Clyde", self)
+        self.btn2 = RegionButton(root, self.game, "Edinburgh", self)
+        self.btn3 = RegionButton(root, self.game, "Norwegian Sea", self)
+        self.btn4 = RegionButton(root, self.game, "Yorkshire", self)
+        self.btn5 = RegionButton(root, self.game, "Liverpool", self)
+        self.btn6 = RegionButton(root, self.game, "North Sea", self)
+
         self.buttons = [self.btn1, self.btn2, self.btn3, self.btn4, self.btn5, self.btn6]
 
-        #canvas.create_line(100, 100, 200, 25)
-        canvas.create_window(100, 100, window=self.btn1)
-        canvas.create_window(250, 100, window=self.btn2)
-        canvas.create_window(400, 100, window=self.btn3)
-        canvas.create_window(100, 250, window=self.btn4)
-        canvas.create_window(250, 250, window=self.btn5)
-        canvas.create_window(400, 250, window=self.btn6)
-        canvas.pack()
+        self.window1 = self.canvas.create_window(100, 100, window=self.btn1)
+        self.window2 = self.canvas.create_window(250, 100, window=self.btn2)
+        self.window3 = self.canvas.create_window(400, 100, window=self.btn3)
+        self.window4 = self.canvas.create_window(100, 250, window=self.btn4)
+        self.window5 = self.canvas.create_window(250, 250, window=self.btn5)
+        self.window6 = self.canvas.create_window(400, 250, window=self.btn6)
+
+        #oval1 = self.canvas.create_oval(25, 25, 175, 175, outline="#f11", fill="#1f1", width=2)
+        #oval2 = self.canvas.create_oval(50, 50, 200, 200, outline="#f11", fill="OrangeRed2", width=2)
+
+        self.canvas.pack()
+
+    def draw_line(self, order):
+        x0, y0 = self.coords[order.region]
+        x1, y1 = self.coords[order.to]
+        line = self.canvas.create_line(x0, y0, x1, y1, fill="OrangeRed2", width=5)
+        self.canvas.tag_raise(line)
+        self.canvas.tag_lower(self.window1)
 
     def change_phase(self):
         if self.game.get_phase == "build":
@@ -93,10 +110,11 @@ class App(tk.Frame):
 
 
 class RegionButton(tk.Frame):
-    def __init__(self, parent, game, name, *args, **kwargs):
+    def __init__(self, parent, game, name, app, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.game = game
         self.name = name
+        self.app = app
         self.army = False
 
         self.btn = tk.Button(self, command=self.click_button, image=pixel, height=100, width=100, compound="c")
@@ -129,11 +147,8 @@ class RegionButton(tk.Frame):
             print("moving to:", self.name)
             current_order.to = self.name
             self.give_order_to_unit(current_order)
-            self.draw_move_line()
+            self.app.draw_line(current_order)
             current_order = None
-
-    def draw_move_line(self):
-        canvas.create_line(100, 100, 200, 25)
 
     def give_order_to_unit(self, order):
         for player in self.game.players:
